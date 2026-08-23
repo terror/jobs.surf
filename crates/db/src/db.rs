@@ -6,6 +6,15 @@ pub struct Db {
 }
 
 impl Db {
+  pub async fn close(&self) {
+    self.pool.close().await;
+  }
+
+  /// Connects to PostgreSQL and runs all pending migrations.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if PostgreSQL cannot be reached or a migration fails.
   pub async fn connect(url: &str) -> Result<Self> {
     let pool = PgPoolOptions::new()
       .max_connections(10)
@@ -21,10 +30,11 @@ impl Db {
     Ok(Self { pool })
   }
 
-  pub async fn close(&self) {
-    self.pool.close().await;
-  }
-
+  /// Inserts a job.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the query fails.
   pub async fn insert_job(&self, job: &Job) -> Result {
     sqlx::query(
       "INSERT INTO jobs (
@@ -56,6 +66,11 @@ impl Db {
     Ok(())
   }
 
+  /// Inserts a source.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the query fails.
   pub async fn insert_source(&self, source: &Source) -> Result {
     sqlx::query(
       "INSERT INTO sources (
@@ -73,6 +88,11 @@ impl Db {
     Ok(())
   }
 
+  /// Verifies that PostgreSQL is reachable.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the probe query fails.
   pub async fn ping(&self) -> Result {
     sqlx::query("SELECT 1").execute(&self.pool).await?;
 

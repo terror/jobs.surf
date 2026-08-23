@@ -7,6 +7,13 @@ pub(crate) struct Server {
 }
 
 impl Server {
+  fn app(db: Db) -> Router {
+    Router::new()
+      .route("/api/health", get(health::get_health))
+      .with_state(State { db })
+      .layer(TraceLayer::new_for_http())
+  }
+
   pub(crate) async fn run(self, options: Options) -> Result {
     let db = Db::connect(&options.db_url).await?;
 
@@ -21,13 +28,6 @@ impl Server {
     axum::serve(listener, Self::app(db)).await?;
 
     Ok(())
-  }
-
-  fn app(db: Db) -> Router {
-    Router::new()
-      .route("/api/health", get(health::get_health))
-      .with_state(State { db })
-      .layer(TraceLayer::new_for_http())
   }
 }
 
@@ -68,6 +68,26 @@ mod tests {
   }
 
   #[tokio::test]
+  async fn health_route_reports_database_failure() {
+    let Test { app, db } = Test::new().await;
+
+    db.close().await;
+
+    let response = app
+      .oneshot(
+        Request::builder()
+          .method(Method::GET)
+          .uri("/api/health")
+          .body(Body::empty())
+          .unwrap(),
+      )
+      .await
+      .unwrap();
+
+    assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE);
+  }
+
+  #[tokio::test]
   async fn health_route_works() {
     let Test { app, .. } = Test::new().await;
 
@@ -91,25 +111,5 @@ mod tests {
         .as_ref(),
       b"ok",
     );
-  }
-
-  #[tokio::test]
-  async fn health_route_reports_database_failure() {
-    let Test { app, db } = Test::new().await;
-
-    db.close().await;
-
-    let response = app
-      .oneshot(
-        Request::builder()
-          .method(Method::GET)
-          .uri("/api/health")
-          .body(Body::empty())
-          .unwrap(),
-      )
-      .await
-      .unwrap();
-
-    assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE);
   }
 }

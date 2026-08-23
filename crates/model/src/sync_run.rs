@@ -3,17 +3,31 @@ use super::*;
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SyncRunStatus {
+  Failed,
   Running,
   Succeeded,
-  Failed,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncRun {
+  pub error: Option<String>,
+  pub finished_at: Option<DateTime<Utc>>,
+  pub jobs_closed: i32,
+  pub jobs_seen: i32,
+  pub jobs_upserted: i32,
+  pub source_id: String,
+  pub started_at: DateTime<Utc>,
+  pub status: SyncRunStatus,
 }
 
 impl SyncRunStatus {
+  #[must_use]
   pub const fn as_str(self) -> &'static str {
     match self {
+      Self::Failed => "failed",
       Self::Running => "running",
       Self::Succeeded => "succeeded",
-      Self::Failed => "failed",
     }
   }
 }
@@ -29,23 +43,10 @@ impl FromStr for SyncRunStatus {
 
   fn from_str(value: &str) -> Result<Self> {
     match value {
+      "failed" => Ok(Self::Failed),
       "running" => Ok(Self::Running),
       "succeeded" => Ok(Self::Succeeded),
-      "failed" => Ok(Self::Failed),
       _ => Err(Error::InvalidSyncRunStatus(value.into())),
     }
   }
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SyncRun {
-  pub source_id: String,
-  pub status: SyncRunStatus,
-  pub jobs_seen: i32,
-  pub jobs_upserted: i32,
-  pub jobs_closed: i32,
-  pub error: Option<String>,
-  pub started_at: DateTime<Utc>,
-  pub finished_at: Option<DateTime<Utc>>,
 }
