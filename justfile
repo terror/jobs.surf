@@ -44,8 +44,6 @@ install:
 
 [group: 'dev']
 install-dev-deps:
-  rustup install nightly
-  rustup update nightly
   cargo install cargo-watch
 
 [group: 'release']
@@ -55,6 +53,14 @@ publish:
 [group: 'dev']
 run *args:
   cargo run {{ args }}
+
+[group: 'setup']
+services:
+  docker compose up --no-recreate -d
+
+[group: 'setup']
+stop-services:
+  docker compose down
 
 [group: 'test']
 test:
