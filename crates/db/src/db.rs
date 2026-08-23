@@ -10,11 +10,11 @@ impl Db {
     self.pool.close().await;
   }
 
-  /// Connects to PostgreSQL and runs all pending migrations.
+  /// Connects to `PostgreSQL` and runs all pending migrations.
   ///
   /// # Errors
   ///
-  /// Returns an error if PostgreSQL cannot be reached or a migration fails.
+  /// Returns an error if `PostgreSQL` cannot be reached or a migration fails.
   pub async fn connect(url: &str) -> Result<Self> {
     let pool = PgPoolOptions::new()
       .max_connections(10)
@@ -88,7 +88,7 @@ impl Db {
     Ok(())
   }
 
-  /// Verifies that PostgreSQL is reachable.
+  /// Verifies that `PostgreSQL` is reachable.
   ///
   /// # Errors
   ///

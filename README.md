@@ -1,3 +1,3 @@
 ## jobs.surf
 
-A job aggregator
+`jobs.surf` is a configurable job aggregator.
