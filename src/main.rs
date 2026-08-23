@@ -15,6 +15,16 @@ use {
   tracing_subscriber::EnvFilter,
 };
 
+#[cfg(test)]
+use {
+  axum::{
+    body::{Body, to_bytes},
+    http::{Method, Request},
+  },
+  std::env,
+  tower::ServiceExt,
+};
+
 mod arguments;
 mod health;
 mod options;
