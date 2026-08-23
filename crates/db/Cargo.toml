@@ -1,0 +1,13 @@
+[package]
+name = "jobs-surf-db"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+jobs-surf-model = { path = "../model" }
+sqlx = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

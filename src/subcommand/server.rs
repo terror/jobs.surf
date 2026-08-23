@@ -8,11 +8,7 @@ pub(crate) struct Server {
 
 impl Server {
   pub(crate) async fn run(self, options: Options) -> Result {
-    let db = PgPoolOptions::new()
-      .max_connections(10)
-      .connect(&options.database_url)
-      .await
-      .context("failed to connect to postgres")?;
+    let db = Db::connect(&options.db_url).await?;
 
     let addr = SocketAddr::from(([0, 0, 0, 0], self.port));
 
@@ -27,7 +23,7 @@ impl Server {
     Ok(())
   }
 
-  fn app(db: PgPool) -> Router {
+  fn app(db: Db) -> Router {
     Router::new()
       .route("/api/health", get(health::get_health))
       .with_state(State { db })
@@ -41,22 +37,28 @@ mod tests {
 
   struct Test {
     app: Router,
-    db: PgPool,
+    db: Db,
   }
 
   impl Test {
     async fn new() -> Self {
-      dotenv().ok();
+      let number = TEST_DATABASE_NUMBER.fetch_add(1, Ordering::Relaxed);
 
-      let database_url = env::var("TEST_DATABASE_URL").unwrap_or_else(|_| {
-        "postgres://jobs_surf:jobs_surf@localhost:5432/jobs_surf".into()
-      });
+      let name = format!(
+        "jobs-surf-test-{}-{}-{}",
+        process::id(),
+        SystemTime::now()
+          .duration_since(UNIX_EPOCH)
+          .unwrap()
+          .as_millis(),
+        number,
+      );
 
-      let db = PgPoolOptions::new()
-        .max_connections(1)
-        .connect(&database_url)
-        .await
-        .unwrap();
+      let url = format!("postgres://jobs_surf:jobs_surf@localhost:5432/{name}");
+
+      Postgres::create_database(&url).await.unwrap();
+
+      let db = Db::connect(&url).await.unwrap();
 
       Self {
         app: Server::app(db.clone()),

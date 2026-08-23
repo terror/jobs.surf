@@ -11,11 +11,11 @@ all: build test clippy fmt-check
 
 [group: 'misc']
 build:
-  cargo build
+  cargo build --workspace
 
 [group: 'check']
 check:
- cargo check
+ cargo check --workspace
 
 [group: 'check']
 ci: test clippy forbid
@@ -24,7 +24,7 @@ ci: test clippy forbid
 
 [group: 'check']
 clippy:
-  cargo clippy --all --all-targets
+  cargo clippy --workspace --all-targets
 
 [group: 'format']
 fmt:
@@ -64,7 +64,7 @@ stop-services:
 
 [group: 'test']
 test:
-  cargo test
+  cargo test --workspace
 
 [group: 'test']
 test-release-workflow:

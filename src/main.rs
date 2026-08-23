@@ -7,7 +7,7 @@ use {
   axum::{Router, extract::State as AppState, http::StatusCode, routing::get},
   clap::{Args, Parser},
   dotenv::dotenv,
-  sqlx::{PgPool, postgres::PgPoolOptions},
+  jobs_surf_db::Db,
   std::{net::SocketAddr, process},
   tokio::net::TcpListener,
   tower_http::trace::TraceLayer,
@@ -21,7 +21,11 @@ use {
     body::{Body, to_bytes},
     http::{Method, Request},
   },
-  std::env,
+  sqlx::{Postgres, migrate::MigrateDatabase},
+  std::{
+    sync::atomic::{AtomicUsize, Ordering},
+    time::{SystemTime, UNIX_EPOCH},
+  },
   tower::ServiceExt,
 };
 
@@ -32,6 +36,9 @@ mod state;
 mod subcommand;
 
 type Result<T = (), E = anyhow::Error> = std::result::Result<T, E>;
+
+#[cfg(test)]
+static TEST_DATABASE_NUMBER: AtomicUsize = AtomicUsize::new(0);
 
 #[tokio::main]
 async fn main() {

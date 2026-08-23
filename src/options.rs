@@ -8,5 +8,5 @@ pub(crate) struct Options {
     global = true,
     long
   )]
-  pub(crate) database_url: String,
+  pub(crate) db_url: String,
 }
