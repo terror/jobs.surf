@@ -14,6 +14,7 @@ pub enum Error {
 #[serde(rename_all = "kebab-case")]
 enum ProviderWorkplace {
   Hybrid,
+  #[serde(alias = "onsite")]
   OnSite,
   Remote,
   Unspecified,
@@ -277,5 +278,13 @@ mod tests {
         ],
       },
     );
+  }
+
+  #[test]
+  fn accepts_levers_onsite_workplace_value() {
+    assert!(matches!(
+      serde_json::from_str::<ProviderWorkplace>(r#""onsite""#),
+      Ok(ProviderWorkplace::OnSite),
+    ));
   }
 }

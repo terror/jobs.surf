@@ -8,6 +8,10 @@ pub(crate) async fn get(
 ) -> Result<Vec<u8>> {
   let response = client
     .get(url)
+    .header(
+      reqwest::header::USER_AGENT,
+      concat!("jobs.surf/", env!("CARGO_PKG_VERSION")),
+    )
     .timeout(std::time::Duration::from_mins(1))
     .send()
     .await

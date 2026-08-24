@@ -92,7 +92,7 @@ impl Adapter for Workable {
         source,
       })?;
 
-    let jobs = response
+    let normalized = response
       .jobs
       .into_iter()
       .map(|raw| {
@@ -181,6 +181,20 @@ impl Adapter for Workable {
       })
       .collect::<Result<Vec<_>, Error>>()?;
 
+    let mut jobs: Vec<JobDraft> = Vec::with_capacity(normalized.len());
+    let mut indexes = HashMap::<String, usize>::new();
+
+    for mut job in normalized {
+      if let Some(index) = indexes.get(&job.external_id).copied() {
+        let locations = &jobs[index].locations;
+        job.locations.retain(|item| !locations.contains(item));
+        jobs[index].locations.extend(job.locations);
+      } else {
+        indexes.insert(job.external_id.clone(), jobs.len());
+        jobs.push(job);
+      }
+    }
+
     Ok(JobSnapshot { jobs })
   }
 }
@@ -241,6 +255,43 @@ mod tests {
           },
         ],
       },
+    );
+  }
+
+  #[test]
+  fn merges_duplicate_jobs_across_locations() {
+    let snapshot = Workable::new("acme")
+      .normalize(
+        br#"{
+          "jobs": [
+            {
+              "application_url": "https://apply.workable.com/j/ABC/apply",
+              "locations": [{"city": "Paris", "country": "France"}],
+              "shortcode": "ABC",
+              "title": "Engineer"
+            },
+            {
+              "application_url": "https://apply.workable.com/j/ABC/apply",
+              "locations": [{"city": "Berlin", "country": "Germany"}],
+              "shortcode": "ABC",
+              "title": "Engineer"
+            }
+          ]
+        }"#,
+      )
+      .unwrap();
+
+    assert_eq!(snapshot.jobs.len(), 1);
+    assert_eq!(
+      snapshot.jobs[0].locations,
+      vec![
+        JobLocation {
+          name: "Paris, France".into(),
+        },
+        JobLocation {
+          name: "Berlin, Germany".into(),
+        },
+      ],
     );
   }
 }
