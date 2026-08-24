@@ -1,5 +1,5 @@
 use {
-  chrono::{DateTime, Utc},
+  chrono::{DateTime, NaiveDate, Utc},
   html_escape::{decode_html_entities, encode_text},
   jobs_surf_model::{
     EmploymentType, JobDraft, JobLocation, JobSnapshot, Workplace,
@@ -15,6 +15,7 @@ pub mod comeet;
 mod error;
 pub mod greenhouse;
 pub mod lever;
+pub mod workable;
 
 pub use crate::{adapter::Adapter, error::Error};
 

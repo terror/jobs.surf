@@ -10,4 +10,6 @@ pub enum Error {
   Greenhouse(#[from] greenhouse::Error),
   #[error(transparent)]
   Lever(#[from] lever::Error),
+  #[error(transparent)]
+  Workable(#[from] workable::Error),
 }

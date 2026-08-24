@@ -7,6 +7,7 @@ pub enum AdapterConfig {
   Comeet { company_id: String },
   Greenhouse { board_token: String },
   Lever { site: String },
+  Workable { account: String },
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
