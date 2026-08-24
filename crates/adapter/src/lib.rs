@@ -11,6 +11,7 @@ use {
 
 mod adapter;
 pub mod ashby;
+pub mod breezy;
 pub mod comeet;
 mod error;
 pub mod greenhouse;

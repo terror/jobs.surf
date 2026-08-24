@@ -1,0 +1,72 @@
+[
+  {
+    "id": "abc123",
+    "friendly_id": "senior-rust-engineer",
+    "name": "Senior Rust Engineer",
+    "url": "https://acme.breezy.hr/p/abc123/senior-rust-engineer",
+    "published_date": "2026-08-20T14:30:00Z",
+    "type": {
+      "id": "fullTime",
+      "name": "Full Time"
+    },
+    "location": {
+      "name": "New York, NY",
+      "is_remote": true,
+      "remote_details": {
+        "value": "hybrid",
+        "label": "Hybrid"
+      }
+    },
+    "locations": [
+      {
+        "name": "New York, NY",
+        "primary": true,
+        "is_remote": true,
+        "remote_details": {
+          "value": "hybrid",
+          "label": "Hybrid"
+        }
+      },
+      {
+        "name": "Remote - US",
+        "primary": false,
+        "is_remote": true,
+        "remote_details": {
+          "value": "remote-location",
+          "label": "Remote"
+        }
+      }
+    ],
+    "description": "<p>Build reliable recruiting systems.</p>",
+    "future_provider_field": {
+      "nested": true
+    }
+  },
+  {
+    "id": "def456",
+    "friendly_id": "platform-engineer",
+    "name": "Platform Engineer",
+    "url": "https://acme.breezy.hr/p/def456/platform-engineer",
+    "type": {
+      "id": "other",
+      "name": "Other"
+    },
+    "location": {
+      "city": "London",
+      "state": {
+        "id": "ENG",
+        "name": "England"
+      },
+      "country": {
+        "id": "GB",
+        "name": "United Kingdom"
+      },
+      "is_remote": false,
+      "remote_details": {
+        "value": "remote",
+        "label": "Remote"
+      }
+    },
+    "locations": []
+  }
+]

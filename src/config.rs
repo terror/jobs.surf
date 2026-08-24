@@ -4,6 +4,7 @@ use serde::Deserialize;
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "type")]
 pub enum AdapterConfig {
   Ashby { board_name: String },
+  Breezy { company_slug: String },
   Comeet { company_id: String },
   Greenhouse { board_token: String },
   Lever { site: String },
