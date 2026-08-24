@@ -1,0 +1,39 @@
+{
+  "offers": [
+    {
+      "id": 2715078,
+      "title": "Product Manager",
+      "description": "<p>Build the product.</p>",
+      "requirements": "<h4>What you bring</h4>",
+      "careers_apply_url": "https://jobs.acme.com/o/product-manager/c/new",
+      "locations": [
+        {
+          "id": 64463,
+          "name": "Utrecht",
+          "state": "Utrecht",
+          "country": "Netherlands",
+          "city": "Utrecht"
+        }
+      ],
+      "remote": true,
+      "hybrid": true,
+      "on_site": false,
+      "employment_type_code": "fulltime_permanent",
+      "published_at": "2026-08-19 10:48:22 UTC",
+      "future_provider_field": {
+        "nested": true
+      }
+    },
+    {
+      "id": 2715079,
+      "title": "Platform Intern",
+      "careers_apply_url": "https://jobs.acme.com/o/platform-intern/c/new",
+      "location": "London, UK",
+      "locations": [],
+      "remote": false,
+      "hybrid": false,
+      "on_site": true,
+      "employment_type_code": "apprenticeship"
+    }
+  ]
+}

@@ -13,5 +13,7 @@ pub enum Error {
   #[error(transparent)]
   Lever(#[from] lever::Error),
   #[error(transparent)]
+  Recruitee(#[from] recruitee::Error),
+  #[error(transparent)]
   Workable(#[from] workable::Error),
 }
