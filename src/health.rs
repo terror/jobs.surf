@@ -1,10 +1,6 @@
 use super::*;
 
-pub(super) fn route() -> MethodRouter<State> {
-  get(get_health)
-}
-
-async fn get_health(
+pub(super) async fn get_health(
   AppState(state): AppState<State>,
 ) -> Result<&'static str, StatusCode> {
   state.db.ping().await.map_err(|error| {

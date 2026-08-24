@@ -10,7 +10,7 @@ use {
     extract::{Query, State as AppState},
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{MethodRouter, get},
+    routing::get,
   },
   base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD},
   chrono::{DateTime, Utc},

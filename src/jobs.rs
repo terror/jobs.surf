@@ -3,10 +3,10 @@ use super::*;
 const DEFAULT_LIMIT: u16 = 20;
 const MAX_LIMIT: u16 = 100;
 
-type Result<T, E = Error> = std::result::Result<T, E>;
+pub(super) type Result<T, E = Error> = std::result::Result<T, E>;
 
 #[derive(Debug, thiserror::Error)]
-enum Error {
+pub(super) enum Error {
   #[error("failed to encode pagination cursor")]
   CursorEncoding(#[source] serde_json::Error),
   #[error("invalid pagination cursor")]
@@ -100,14 +100,14 @@ impl From<JobRecord> for JobResponse {
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct JobsQuery {
+pub(super) struct JobsQuery {
   cursor: Option<String>,
   limit: Option<u16>,
 }
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-struct JobsResponse {
+pub(super) struct JobsResponse {
   jobs: Vec<JobResponse>,
   next_cursor: Option<String>,
 }
@@ -125,11 +125,7 @@ impl From<JobLocation> for LocationResponse {
   }
 }
 
-pub(super) fn route() -> MethodRouter<State> {
-  get(get_jobs)
-}
-
-async fn get_jobs(
+pub(super) async fn get_jobs(
   AppState(state): AppState<State>,
   Query(query): Query<JobsQuery>,
 ) -> Result<Json<JobsResponse>> {

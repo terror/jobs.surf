@@ -9,8 +9,8 @@ pub(crate) struct Serve {
 impl Serve {
   fn app(db: Db) -> Router {
     Router::new()
-      .route("/healthz", health::route())
-      .route("/v1/jobs", jobs::route())
+      .route("/healthz", get(health::get_health))
+      .route("/v1/jobs", get(jobs::get_jobs))
       .with_state(State { db })
       .layer(TraceLayer::new_for_http())
   }
