@@ -3,6 +3,7 @@ use serde::Deserialize;
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "type")]
 pub enum AdapterConfig {
+  Ashby { board_name: String },
   Greenhouse { board_token: String },
 }
 

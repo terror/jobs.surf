@@ -871,6 +871,7 @@ dependencies = [
 name = "jobs-surf-adapter"
 version = "0.0.0"
 dependencies = [
+ "chrono",
  "html-escape",
  "jobs-surf-model",
  "serde",
