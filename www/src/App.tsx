@@ -271,6 +271,7 @@ function App() {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
   const [sourceId, setSourceId] = useState(ALL_SOURCES)
   const [sources, setSources] = useState<SourceResponse[]>([])
+  const [sourcesLoaded, setSourcesLoaded] = useState(false)
   const deferredQuery = useDeferredValue(query)
 
   useEffect(() => {
@@ -283,6 +284,11 @@ function App() {
         }
       })
       .catch(() => undefined)
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setSourcesLoaded(true)
+        }
+      })
 
     return () => controller.abort()
   }, [])
@@ -421,7 +427,7 @@ function App() {
             </div>
             <div className="flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-secondary">
               <Radio className="size-3.5 text-accent" />
-              {sources.length} sources
+              {sourcesLoaded ? `${sources.length} sources` : "Loading sources..."}
             </div>
           </div>
         </div>
