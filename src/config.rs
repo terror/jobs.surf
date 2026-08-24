@@ -2,7 +2,7 @@ use super::*;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "type")]
-pub enum AdapterConfig {
+pub(crate) enum AdapterConfig {
   Ashby { board_name: String },
   Breezy { company_slug: String },
   Comeet { company_id: String, token: String },
@@ -16,7 +16,7 @@ pub enum AdapterConfig {
 
 impl AdapterConfig {
   #[must_use]
-  pub fn adapter(&self) -> (Box<dyn Adapter>, Value) {
+  pub(crate) fn adapter(&self) -> (Box<dyn Adapter>, Value) {
     match self {
       Self::Ashby { board_name } => (
         Box::new(Ashby::new(board_name)),
@@ -58,7 +58,7 @@ impl AdapterConfig {
   }
 
   #[must_use]
-  pub const fn kind(&self) -> &'static str {
+  pub(crate) const fn kind(&self) -> &'static str {
     match self {
       Self::Ashby { .. } => "ashby",
       Self::Breezy { .. } => "breezy",
@@ -75,7 +75,7 @@ impl AdapterConfig {
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+pub(crate) struct Config {
   pub sources: Vec<SourceConfig>,
 }
 
@@ -86,14 +86,14 @@ impl Config {
   ///
   /// Returns an error when the input is not valid TOML or does not match the
   /// expected configuration shape.
-  pub fn from_toml(input: &str) -> Result<Self, toml::de::Error> {
+  pub(crate) fn from_toml(input: &str) -> Result<Self, toml::de::Error> {
     toml::from_str(input)
   }
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(deny_unknown_fields)]
-pub struct SourceConfig {
+pub(crate) struct SourceConfig {
   pub adapter: AdapterConfig,
   #[serde(default = "enabled_by_default")]
   pub enabled: bool,

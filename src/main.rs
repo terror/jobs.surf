@@ -1,6 +1,6 @@
 use {
   crate::{
-    arguments::Arguments, options::Options, state::State,
+    arguments::Arguments, config::Config, options::Options, state::State,
     subcommand::Subcommand,
   },
   ammonia::clean,
@@ -16,10 +16,15 @@ use {
   chrono::{DateTime, Utc},
   clap::{Args, Parser},
   dotenv::dotenv,
-  jobs_surf::config::Config,
+  jobs_surf_adapter::{
+    Adapter, ashby::Ashby, breezy::Breezy, comeet::Comeet,
+    greenhouse::Greenhouse, lever::Lever, personio::Personio,
+    recruitee::Recruitee, teamtailor::Teamtailor, workable::Workable,
+  },
   jobs_surf_db::{Db, JobCursor, JobRecord},
   jobs_surf_model::{JobLocation, Source},
   serde::{Deserialize, Serialize},
+  serde_json::Value,
   std::{fs, net::SocketAddr, num::NonZeroU16, path::PathBuf, process},
   tokio::net::TcpListener,
   tower_http::trace::TraceLayer,
@@ -34,7 +39,7 @@ use {
     http::{Method, Request},
   },
   jobs_surf_model::{JobDraft, JobSnapshot},
-  serde_json::{Value, json},
+  serde_json::json,
   sqlx::{Postgres, migrate::MigrateDatabase},
   std::{
     sync::atomic::{AtomicUsize, Ordering},
@@ -44,6 +49,7 @@ use {
 };
 
 mod arguments;
+mod config;
 mod health;
 mod jobs;
 mod options;
