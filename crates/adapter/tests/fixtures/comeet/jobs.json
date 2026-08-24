@@ -1,0 +1,45 @@
+[
+  {
+    "uid": "E8.91F",
+    "name": "Android Developer",
+    "employment_type": "Full-time",
+    "workplace_type": "On-site",
+    "location": {
+      "name": "New York",
+      "country": "US",
+      "city": "Brooklyn",
+      "state": "NY",
+      "is_remote": false
+    },
+    "url_active_page": "https://www.comeet.com/jobs/acme/E5.007/android-developer/E8.91F",
+    "url_comeet_hosted_page": "https://www.comeet.com/jobs/acme/E5.007/android-developer/E8.91F",
+    "time_updated": "2026-08-20T16:19:06Z",
+    "details": [
+      {
+        "name": "Requirements",
+        "value": "<p>Know Rust and Kotlin.</p>",
+        "order": 2
+      },
+      {
+        "name": "Description",
+        "value": "<p>Build reliable mobile systems.</p>",
+        "order": 1
+      }
+    ],
+    "future_provider_field": {
+      "nested": true
+    }
+  },
+  {
+    "uid": "A2.123",
+    "name": "Platform Engineer",
+    "employment_type": "Contract",
+    "location": {
+      "country": "UK",
+      "city": "London",
+      "state": "England",
+      "is_remote": true
+    },
+    "url_comeet_hosted_page": "https://www.comeet.com/jobs/acme/E5.007/platform-engineer/A2.123"
+  }
+]
