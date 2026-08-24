@@ -121,3 +121,41 @@ jobs:
 
     - name: Test
       run: cargo test --locked --workspace --all-targets
+
+  www:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+
+    - uses: Swatinem/rust-cache@v2
+
+    - uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: 1.3.14
+
+    - name: Install frontend dependencies
+      run: bun install --cwd www --frozen-lockfile
+
+    - name: Generate OpenAPI contract
+      run: cargo run --locked -- openapi --output openapi/jobs-surf.json
+
+    - name: Generate API client
+      run: bun run --cwd www generate:api
+
+    - name: Check generated files
+      run: git diff --exit-code -- openapi/jobs-surf.json www/src/client
+
+    - name: Lint frontend
+      run: bun run --cwd www lint
+
+    - name: Typecheck frontend
+      run: bun run --cwd www typecheck
+
+    - name: Build frontend
+      run: bun run --cwd www build
+
+    - name: Audit frontend dependencies
+      run: bun audit --cwd www

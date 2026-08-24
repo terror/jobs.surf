@@ -7,7 +7,7 @@ alias f := fmt
 alias r := run
 alias t := test
 
-all: build test clippy fmt-check
+all: build test clippy fmt-check www-check
 
 [group: 'misc']
 build:
@@ -81,3 +81,26 @@ update-changelog:
 [group: 'dev']
 watch +COMMAND='test':
   cargo watch --clear --exec "{{ COMMAND }}"
+
+[group: 'misc']
+www-build:
+  bun run --cwd www build
+
+[group: 'check']
+www-check:
+  bun run --cwd www lint
+  bun run --cwd www typecheck
+  bun run --cwd www build
+
+[group: 'dev']
+www-dev:
+  bun run --cwd www dev
+
+[group: 'dev']
+www-generate:
+  cargo run --locked -- openapi --output openapi/jobs-surf.json
+  bun run --cwd www generate:api
+
+[group: 'setup']
+www-install:
+  bun install --cwd www --frozen-lockfile
