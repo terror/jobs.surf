@@ -1,0 +1,16 @@
+{
+  "jobs": [
+    {
+      "absolute_url": "https://boards.greenhouse.io/acme/jobs/127817",
+      "content": "<p>Build resilient Rust systems.</p>",
+      "id": 127817,
+      "location": {
+        "name": "Remote"
+      },
+      "title": "Senior Rust Engineer"
+    }
+  ],
+  "meta": {
+    "total": 1
+  }
+}

@@ -16,6 +16,8 @@ pub enum Error {
     board_token: String,
     expected: usize,
   },
+  #[error("Greenhouse API origin `{api_origin}` cannot be used as a base URL")]
+  InvalidApiOrigin { api_origin: Url },
 }
 
 #[derive(Deserialize)]
@@ -45,6 +47,7 @@ struct Response {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Greenhouse {
+  api_origin: Option<Url>,
   board_token: String,
 }
 
@@ -57,8 +60,28 @@ impl Greenhouse {
   #[must_use]
   pub fn new(board_token: impl Into<String>) -> Self {
     Self {
+      api_origin: None,
       board_token: board_token.into(),
     }
+  }
+
+  /// Creates an adapter that fetches from a custom Greenhouse API origin.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the URL cannot be used as a hierarchical base URL.
+  pub fn with_api_origin(
+    board_token: impl Into<String>,
+    api_origin: Url,
+  ) -> Result<Self> {
+    if api_origin.cannot_be_a_base() {
+      return Err(Error::InvalidApiOrigin { api_origin }.into());
+    }
+
+    Ok(Self {
+      api_origin: Some(api_origin),
+      board_token: board_token.into(),
+    })
   }
 }
 
@@ -67,14 +90,24 @@ impl Adapter for Greenhouse {
   async fn fetch(&self) -> Result<JobSnapshot> {
     let client = reqwest::Client::new();
 
-    let mut url = http::parse_url(
-      "Greenhouse",
-      &self.board_token,
-      format!(
-        "https://boards-api.greenhouse.io/v1/boards/{}/jobs",
-        self.board_token,
-      ),
-    )?;
+    let mut url = if let Some(api_origin) = &self.api_origin {
+      api_origin.clone()
+    } else {
+      http::parse_url(
+        "Greenhouse",
+        &self.board_token,
+        "https://boards-api.greenhouse.io".into(),
+      )?
+    };
+
+    let api_origin = url.clone();
+    url.set_fragment(None);
+    url.set_path("/");
+    url.set_query(None);
+    url
+      .path_segments_mut()
+      .map_err(|()| Error::InvalidApiOrigin { api_origin })?
+      .extend(["v1", "boards", &self.board_token, "jobs"]);
 
     url.query_pairs_mut().append_pair("content", "true");
 

@@ -39,11 +39,17 @@ impl Serve {
 mod tests {
   use super::*;
 
+  const GREENHOUSE_FIXTURE: &[u8] =
+    include_bytes!("../../crates/adapter/tests/fixtures/greenhouse/jobs.json");
+  const GREENHOUSE_UPDATED_FIXTURE: &[u8] = include_bytes!(
+    "../../crates/adapter/tests/fixtures/greenhouse/jobs-updated.json"
+  );
   static TEST_DATABASE_NUMBER: AtomicUsize = AtomicUsize::new(0);
 
   struct Test {
     app: Router,
     db: Db,
+    pool: PgPool,
   }
 
   impl Test {
@@ -80,10 +86,12 @@ mod tests {
       Postgres::create_database(&url).await.unwrap();
 
       let db = Db::connect(&url).await.unwrap();
+      let pool = PgPool::connect(&url).await.unwrap();
 
       Self {
         app: Serve::app(db.clone()),
         db,
+        pool,
       }
     }
 
@@ -110,11 +118,158 @@ mod tests {
     }
   }
 
+  async fn greenhouse_response(
+    AppState(requests): AppState<Arc<AtomicUsize>>,
+    uri: Uri,
+  ) -> Response {
+    if uri.query() != Some("content=true") {
+      return StatusCode::BAD_REQUEST.into_response();
+    }
+
+    match requests.fetch_add(1, Ordering::Relaxed) {
+      0 => (
+        StatusCode::OK,
+        [("content-type", "application/json")],
+        GREENHOUSE_FIXTURE,
+      )
+        .into_response(),
+      1 => (
+        StatusCode::OK,
+        [("content-type", "application/json")],
+        GREENHOUSE_UPDATED_FIXTURE,
+      )
+        .into_response(),
+      _ => StatusCode::SERVICE_UNAVAILABLE.into_response(),
+    }
+  }
+
+  async fn persisted_jobs(pool: &PgPool) -> Value {
+    sqlx::query_scalar::<_, Value>(
+      "SELECT COALESCE(
+         JSONB_AGG(TO_JSONB(jobs) ORDER BY id),
+         '[]'::JSONB
+       )
+       FROM jobs",
+    )
+    .fetch_one(pool)
+    .await
+    .unwrap()
+  }
+
   async fn response_json(response: Response) -> Value {
     serde_json::from_slice(
       &to_bytes(response.into_body(), usize::MAX).await.unwrap(),
     )
     .unwrap()
+  }
+
+  #[tokio::test]
+  async fn greenhouse_sync_preserves_jobs_when_fetching_fails() {
+    let test = Test::new().await;
+    let requests = Arc::new(AtomicUsize::new(0));
+
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let mock = Router::new()
+      .route("/v1/boards/acme/jobs", get(greenhouse_response))
+      .with_state(Arc::clone(&requests));
+
+    let server = tokio::spawn(async move {
+      axum::serve(listener, mock).await.unwrap();
+    });
+
+    let adapter = Greenhouse::with_api_origin(
+      "acme",
+      format!("http://{address}").parse().unwrap(),
+    )
+    .unwrap();
+
+    let source = Source {
+      adapter: "greenhouse".into(),
+      configuration: json!({ "board_token": "acme" }),
+      enabled: true,
+      id: "acme-careers".into(),
+      organization: "Acme".into(),
+    };
+
+    sync::synchronize(&test.db, &source, &adapter)
+      .await
+      .unwrap();
+
+    let response = test.get("/v1/jobs").await;
+    assert_eq!(response.status(), StatusCode::OK);
+    let initial_jobs = response_json(response).await;
+
+    assert_eq!(initial_jobs["jobs"].as_array().unwrap().len(), 2);
+    assert!(initial_jobs.to_string().contains("Rust Engineer"));
+    assert!(initial_jobs.to_string().contains("General Application"));
+    assert!(!initial_jobs.to_string().contains("future_provider_field"));
+
+    sync::synchronize(&test.db, &source, &adapter)
+      .await
+      .unwrap();
+
+    let response = test.get("/v1/jobs").await;
+    assert_eq!(response.status(), StatusCode::OK);
+    let changed_jobs = response_json(response).await;
+
+    assert_eq!(changed_jobs["jobs"].as_array().unwrap().len(), 1);
+    assert_eq!(changed_jobs["jobs"][0]["title"], "Senior Rust Engineer");
+    assert_eq!(
+      changed_jobs["jobs"][0]["descriptionHtml"],
+      "<p>Build resilient Rust systems.</p>",
+    );
+
+    let successful_run = sqlx::query_as::<_, (String, i32, i32, i32)>(
+      "SELECT status, jobs_seen, jobs_upserted, jobs_closed
+       FROM sync_runs
+       ORDER BY id DESC
+       LIMIT 1",
+    )
+    .fetch_one(&test.pool)
+    .await
+    .unwrap();
+
+    assert_eq!(successful_run, ("succeeded".into(), 1, 1, 1));
+
+    let jobs_before_failure = persisted_jobs(&test.pool).await;
+
+    let error = sync::synchronize(&test.db, &source, &adapter)
+      .await
+      .unwrap_err();
+
+    assert!(
+      format!("{error:#}")
+        .contains("failed to fetch jobs from Greenhouse source `acme`")
+    );
+
+    let failed_run = sqlx::query_as::<_, (String, i32, i32, i32, bool, bool)>(
+      "SELECT
+         status,
+         jobs_seen,
+         jobs_upserted,
+         jobs_closed,
+         error IS NOT NULL,
+         finished_at IS NOT NULL
+       FROM sync_runs
+       ORDER BY id DESC
+       LIMIT 1",
+    )
+    .fetch_one(&test.pool)
+    .await
+    .unwrap();
+
+    assert_eq!(failed_run, ("failed".into(), 0, 0, 0, true, true));
+
+    let jobs_after_failure = persisted_jobs(&test.pool).await;
+
+    assert_eq!(jobs_after_failure, jobs_before_failure);
+
+    let response = test.get("/v1/jobs").await;
+    assert_eq!(response_json(response).await, changed_jobs);
+    assert_eq!(requests.load(Ordering::Relaxed), 3);
+
+    server.abort();
   }
 
   #[tokio::test]

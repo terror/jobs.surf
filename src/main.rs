@@ -39,13 +39,16 @@ use {
 use {
   axum::{
     body::{Body, to_bytes},
-    http::{Method, Request},
+    http::{Method, Request, Uri},
   },
   jobs_surf_model::{JobDraft, JobSnapshot, Workplace},
   serde_json::json,
-  sqlx::{Postgres, migrate::MigrateDatabase},
+  sqlx::{PgPool, Postgres, migrate::MigrateDatabase},
   std::{
-    sync::atomic::{AtomicUsize, Ordering},
+    sync::{
+      Arc,
+      atomic::{AtomicUsize, Ordering},
+    },
     time::{SystemTime, UNIX_EPOCH},
   },
   tower::ServiceExt,

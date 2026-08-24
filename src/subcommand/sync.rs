@@ -52,45 +52,52 @@ impl Sync {
 
     let db = Db::connect(&options.db_url).await?;
 
-    let sync_run_id = db.start_sync(&database_source).await?;
+    synchronize(&db, &database_source, adapter.as_ref()).await
+  }
+}
 
-    let outcome: Result<_> = async {
-      let snapshot = adapter.fetch().await?;
+pub(super) async fn synchronize(
+  db: &Db,
+  source: &Source,
+  adapter: &dyn Adapter,
+) -> Result {
+  let sync_run_id = db.start_sync(source).await?;
 
-      snapshot.validate()?;
+  let outcome: Result<_> = async {
+    let snapshot = adapter.fetch().await?;
 
-      db.complete_sync(sync_run_id, &database_source.id, &snapshot)
-        .await
-        .map_err(Into::into)
+    snapshot.validate()?;
+
+    db.complete_sync(sync_run_id, &source.id, &snapshot)
+      .await
+      .map_err(Into::into)
+  }
+  .await;
+
+  match outcome {
+    Ok(summary) => {
+      info!(
+        source = %source.id,
+        sync_run_id,
+        jobs_seen = summary.jobs_seen,
+        jobs_upserted = summary.jobs_upserted,
+        jobs_closed = summary.jobs_closed,
+        "sync completed",
+      );
+
+      Ok(())
     }
-    .await;
+    Err(sync_error) => {
+      let error_message = format!("{sync_error:#}");
 
-    match outcome {
-      Ok(summary) => {
-        info!(
-          source = %database_source.id,
-          sync_run_id,
-          jobs_seen = summary.jobs_seen,
-          jobs_upserted = summary.jobs_upserted,
-          jobs_closed = summary.jobs_closed,
-          "sync completed",
-        );
-
-        Ok(())
+      if let Err(mark_error) = db.fail_sync(sync_run_id, &error_message).await {
+        return Err(anyhow::anyhow!(
+          "{sync_error:#}; additionally failed to mark sync run \
+           `{sync_run_id}` as failed: {mark_error}"
+        ));
       }
-      Err(sync_error) => {
-        let error_message = format!("{sync_error:#}");
 
-        if let Err(mark_error) = db.fail_sync(sync_run_id, &error_message).await
-        {
-          return Err(anyhow::anyhow!(
-            "{sync_error:#}; additionally failed to mark sync run \
-             `{sync_run_id}` as failed: {mark_error}"
-          ));
-        }
-
-        Err(sync_error)
-      }
+      Err(sync_error)
     }
   }
 }
