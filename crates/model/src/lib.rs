@@ -7,7 +7,6 @@ use {
     fmt::{self, Display, Formatter},
     str::FromStr,
   },
-  thiserror::Error as ThisError,
   url::Url,
 };
 

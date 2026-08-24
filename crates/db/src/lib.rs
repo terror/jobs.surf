@@ -6,7 +6,6 @@ use {
   },
   sqlx::{PgPool, migrate::MigrateError, postgres::PgPoolOptions, types::Json},
   std::num::{NonZeroU16, TryFromIntError},
-  thiserror::Error as ThisError,
 };
 
 #[cfg(test)]

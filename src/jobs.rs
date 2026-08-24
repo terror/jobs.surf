@@ -5,7 +5,7 @@ const MAX_LIMIT: u16 = 100;
 
 type Result<T, E = Error> = std::result::Result<T, E>;
 
-#[derive(Debug, ThisError)]
+#[derive(Debug, thiserror::Error)]
 enum Error {
   #[error("failed to encode pagination cursor")]
   CursorEncoding(#[source] serde_json::Error),

@@ -21,7 +21,6 @@ use {
   jobs_surf_model::{JobLocation, Source},
   serde::{Deserialize, Serialize},
   std::{fs, net::SocketAddr, num::NonZeroU16, path::PathBuf, process},
-  thiserror::Error as ThisError,
   tokio::net::TcpListener,
   tower_http::trace::TraceLayer,
   tracing::{error, info},

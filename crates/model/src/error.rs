@@ -1,6 +1,4 @@
-use super::*;
-
-#[derive(Debug, Eq, PartialEq, ThisError)]
+#[derive(Debug, Eq, PartialEq, thiserror::Error)]
 pub enum Error {
   #[error("provider returned duplicate external ID `{0}`")]
   DuplicateJobExternalId(String),

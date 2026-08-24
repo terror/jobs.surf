@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Debug, ThisError)]
+#[derive(Debug, thiserror::Error)]
 pub enum Error {
   #[error("failed to connect to postgres")]
   Connect(#[source] sqlx::Error),

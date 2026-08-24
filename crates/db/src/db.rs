@@ -485,6 +485,7 @@ mod tests {
     };
 
     let first_run = db.start_sync(&source).await.unwrap();
+
     let summary = db
       .complete_sync(
         first_run,
