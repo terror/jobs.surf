@@ -10,12 +10,36 @@ pub enum EmploymentType {
   Temporary,
 }
 
+impl EmploymentType {
+  #[must_use]
+  pub const fn as_str(self) -> &'static str {
+    match self {
+      Self::Contract => "contract",
+      Self::FullTime => "full_time",
+      Self::Internship => "internship",
+      Self::PartTime => "part_time",
+      Self::Temporary => "temporary",
+    }
+  }
+}
+
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Workplace {
   Hybrid,
   OnSite,
   Remote,
+}
+
+impl Workplace {
+  #[must_use]
+  pub const fn as_str(self) -> &'static str {
+    match self {
+      Self::Hybrid => "hybrid",
+      Self::OnSite => "on_site",
+      Self::Remote => "remote",
+    }
+  }
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -44,19 +68,6 @@ pub struct JobSnapshot {
   pub jobs: Vec<JobDraft>,
 }
 
-impl EmploymentType {
-  #[must_use]
-  pub const fn as_str(self) -> &'static str {
-    match self {
-      Self::Contract => "contract",
-      Self::FullTime => "full_time",
-      Self::Internship => "internship",
-      Self::PartTime => "part_time",
-      Self::Temporary => "temporary",
-    }
-  }
-}
-
 impl JobSnapshot {
   /// Validates invariants required to persist this complete snapshot safely.
   ///
@@ -82,16 +93,5 @@ impl JobSnapshot {
     }
 
     Ok(())
-  }
-}
-
-impl Workplace {
-  #[must_use]
-  pub const fn as_str(self) -> &'static str {
-    match self {
-      Self::Hybrid => "hybrid",
-      Self::OnSite => "on_site",
-      Self::Remote => "remote",
-    }
   }
 }

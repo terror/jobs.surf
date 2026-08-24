@@ -8,19 +8,6 @@ pub enum SyncRunStatus {
   Succeeded,
 }
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SyncRun {
-  pub error: Option<String>,
-  pub finished_at: Option<DateTime<Utc>>,
-  pub jobs_closed: i32,
-  pub jobs_seen: i32,
-  pub jobs_upserted: i32,
-  pub source_id: String,
-  pub started_at: DateTime<Utc>,
-  pub status: SyncRunStatus,
-}
-
 impl SyncRunStatus {
   #[must_use]
   pub const fn as_str(self) -> &'static str {
@@ -49,4 +36,17 @@ impl FromStr for SyncRunStatus {
       _ => Err(Error::InvalidSyncRunStatus(value.into())),
     }
   }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncRun {
+  pub error: Option<String>,
+  pub finished_at: Option<DateTime<Utc>>,
+  pub jobs_closed: i32,
+  pub jobs_seen: i32,
+  pub jobs_upserted: i32,
+  pub source_id: String,
+  pub started_at: DateTime<Utc>,
+  pub status: SyncRunStatus,
 }

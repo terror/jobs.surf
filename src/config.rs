@@ -79,16 +79,6 @@ pub struct Config {
   pub sources: Vec<SourceConfig>,
 }
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
-#[serde(deny_unknown_fields)]
-pub struct SourceConfig {
-  pub adapter: AdapterConfig,
-  #[serde(default = "enabled_by_default")]
-  pub enabled: bool,
-  pub id: String,
-  pub organization: String,
-}
-
 impl Config {
   /// Parses application configuration from TOML.
   ///
@@ -99,6 +89,16 @@ impl Config {
   pub fn from_toml(input: &str) -> Result<Self, toml::de::Error> {
     toml::from_str(input)
   }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct SourceConfig {
+  pub adapter: AdapterConfig,
+  #[serde(default = "enabled_by_default")]
+  pub enabled: bool,
+  pub id: String,
+  pub organization: String,
 }
 
 const fn enabled_by_default() -> bool {

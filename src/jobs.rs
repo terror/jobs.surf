@@ -17,11 +17,46 @@ enum Error {
   Repository(#[from] jobs_surf_db::Error),
 }
 
+impl IntoResponse for Error {
+  fn into_response(self) -> Response {
+    let (status, message) = match self {
+      Self::InvalidCursor => (StatusCode::BAD_REQUEST, "invalid cursor"),
+      Self::InvalidLimit => {
+        (StatusCode::BAD_REQUEST, "limit must be between 1 and 100")
+      }
+      Self::CursorEncoding(_) | Self::Repository(_) => {
+        error!(%self, "failed to list jobs");
+        (StatusCode::INTERNAL_SERVER_ERROR, "internal server error")
+      }
+    };
+
+    (status, Json(ErrorResponse { error: message })).into_response()
+  }
+}
+
 #[derive(Deserialize, Serialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 struct Cursor {
   first_seen_at: DateTime<Utc>,
   id: i64,
+}
+
+impl From<Cursor> for JobCursor {
+  fn from(cursor: Cursor) -> Self {
+    Self {
+      first_seen_at: cursor.first_seen_at,
+      id: cursor.id,
+    }
+  }
+}
+
+impl From<JobCursor> for Cursor {
+  fn from(cursor: JobCursor) -> Self {
+    Self {
+      first_seen_at: cursor.first_seen_at,
+      id: cursor.id,
+    }
+  }
 }
 
 #[derive(Serialize)]
@@ -43,6 +78,26 @@ struct JobResponse {
   workplace: Option<String>,
 }
 
+impl From<JobRecord> for JobResponse {
+  fn from(job: JobRecord) -> Self {
+    Self {
+      apply_url: job.apply_url,
+      description_html: job.description_html.map(|html| clean(&html)),
+      employment_type: job.employment_type,
+      id: job.id.to_string(),
+      locations: job
+        .locations
+        .into_iter()
+        .map(LocationResponse::from)
+        .collect(),
+      published_at: job.published_at,
+      source_id: job.source_id,
+      title: job.title,
+      workplace: job.workplace,
+    }
+  }
+}
+
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct JobsQuery {
@@ -60,6 +115,14 @@ struct JobsResponse {
 #[derive(Serialize)]
 struct LocationResponse {
   name: String,
+}
+
+impl From<JobLocation> for LocationResponse {
+  fn from(location: JobLocation) -> Self {
+    Self {
+      name: location.name,
+    }
+  }
 }
 
 pub(super) fn route() -> MethodRouter<State> {
@@ -106,67 +169,4 @@ fn encode_cursor(cursor: JobCursor) -> Result<String> {
     serde_json::to_vec(&Cursor::from(cursor)).map_err(Error::CursorEncoding)?;
 
   Ok(URL_SAFE_NO_PAD.encode(bytes))
-}
-
-impl From<Cursor> for JobCursor {
-  fn from(cursor: Cursor) -> Self {
-    Self {
-      first_seen_at: cursor.first_seen_at,
-      id: cursor.id,
-    }
-  }
-}
-
-impl From<JobCursor> for Cursor {
-  fn from(cursor: JobCursor) -> Self {
-    Self {
-      first_seen_at: cursor.first_seen_at,
-      id: cursor.id,
-    }
-  }
-}
-
-impl From<JobLocation> for LocationResponse {
-  fn from(location: JobLocation) -> Self {
-    Self {
-      name: location.name,
-    }
-  }
-}
-
-impl From<JobRecord> for JobResponse {
-  fn from(job: JobRecord) -> Self {
-    Self {
-      apply_url: job.apply_url,
-      description_html: job.description_html.map(|html| clean(&html)),
-      employment_type: job.employment_type,
-      id: job.id.to_string(),
-      locations: job
-        .locations
-        .into_iter()
-        .map(LocationResponse::from)
-        .collect(),
-      published_at: job.published_at,
-      source_id: job.source_id,
-      title: job.title,
-      workplace: job.workplace,
-    }
-  }
-}
-
-impl IntoResponse for Error {
-  fn into_response(self) -> Response {
-    let (status, message) = match self {
-      Self::InvalidCursor => (StatusCode::BAD_REQUEST, "invalid cursor"),
-      Self::InvalidLimit => {
-        (StatusCode::BAD_REQUEST, "limit must be between 1 and 100")
-      }
-      Self::CursorEncoding(_) | Self::Repository(_) => {
-        error!(%self, "failed to list jobs");
-        (StatusCode::INTERNAL_SERVER_ERROR, "internal server error")
-      }
-    };
-
-    (status, Json(ErrorResponse { error: message })).into_response()
-  }
 }
