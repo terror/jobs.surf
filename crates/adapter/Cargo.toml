@@ -8,10 +8,12 @@ publish = false
 workspace = true
 
 [dependencies]
+async-trait = { workspace = true }
 chrono = { workspace = true }
 html-escape = "0.2.15"
 jobs-surf-model = { path = "../model" }
 quick-xml = { version = "0.42.0", features = ["serialize"] }
+reqwest = { workspace = true }
 roxmltree = "0.21.1"
 serde = { workspace = true }
 serde_json = { workspace = true }

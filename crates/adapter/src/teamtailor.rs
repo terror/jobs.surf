@@ -35,6 +35,42 @@ pub enum Error {
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct FeedAddress {
+  address_locality: Option<String>,
+  address_region: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct FeedItem {
+  content_html: Option<String>,
+  date_published: Option<DateTime<Utc>>,
+  id: String,
+  #[serde(rename = "_jobposting")]
+  job_posting: Option<FeedJobPosting>,
+  title: String,
+  url: Url,
+}
+
+#[derive(Deserialize)]
+struct FeedJobLocation {
+  address: FeedAddress,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct FeedJobPosting {
+  #[serde(default)]
+  job_location: Vec<FeedJobLocation>,
+}
+
+#[derive(Deserialize)]
+struct FeedResponse {
+  items: Vec<Value>,
+  next_url: Option<Url>,
+}
+
+#[derive(Deserialize)]
 #[serde(rename_all = "kebab-case")]
 struct ProviderAttributes {
   body: Option<String>,
@@ -134,9 +170,108 @@ impl Teamtailor {
       company: company.into(),
     }
   }
+
+  fn normalize_feed(&self, response: FeedResponse) -> Result<JobSnapshot> {
+    let jobs = response
+      .items
+      .into_iter()
+      .map(|raw| {
+        let job: FeedItem =
+          serde_json::from_value(raw.clone()).map_err(|source| {
+            Error::Decode {
+              company: self.company.clone(),
+              source,
+            }
+          })?;
+
+        let locations = job
+          .job_posting
+          .into_iter()
+          .flat_map(|posting| posting.job_location)
+          .filter_map(|location| {
+            let name = [
+              location.address.address_locality,
+              location.address.address_region,
+            ]
+            .into_iter()
+            .flatten()
+            .filter(|part| !part.trim().is_empty())
+            .collect::<Vec<_>>()
+            .join(", ");
+
+            (!name.is_empty()).then_some(JobLocation { name })
+          })
+          .collect();
+
+        Ok(JobDraft {
+          apply_url: job.url,
+          description_html: job.content_html,
+          employment_type: None,
+          external_id: job.id,
+          locations,
+          published_at: job.date_published,
+          raw,
+          title: job.title,
+          workplace: None,
+        })
+      })
+      .collect::<Result<Vec<_>, Error>>()?;
+
+    Ok(JobSnapshot { jobs })
+  }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Teamtailor {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    const PAGE_SIZE: usize = 100;
+
+    let host = if self.company.contains('.') {
+      self.company.clone()
+    } else {
+      format!("{}.teamtailor.com", self.company)
+    };
+
+    let client = reqwest::Client::new();
+
+    let mut jobs = Vec::new();
+    let mut page = 1;
+
+    loop {
+      let mut url = http::parse_url(
+        "Teamtailor",
+        &self.company,
+        format!("https://{host}/jobs.json"),
+      )?;
+
+      url
+        .query_pairs_mut()
+        .append_pair("page", &page.to_string())
+        .append_pair("per_page", &PAGE_SIZE.to_string());
+
+      let response =
+        http::get(&client, "Teamtailor", &self.company, url).await?;
+
+      let response: FeedResponse =
+        serde_json::from_slice(&response).map_err(|source| Error::Decode {
+          company: self.company.clone(),
+          source,
+        })?;
+
+      let has_next = response.next_url.is_some();
+
+      jobs.extend(self.normalize_feed(response)?.jobs);
+
+      if !has_next {
+        break;
+      }
+
+      page += 1;
+    }
+
+    Ok(JobSnapshot { jobs })
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Response =
       serde_json::from_slice(response).map_err(|source| Error::Decode {

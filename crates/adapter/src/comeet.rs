@@ -56,6 +56,7 @@ struct ProviderJob {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Comeet {
   company_id: String,
+  token: String,
 }
 
 impl Comeet {
@@ -65,14 +66,38 @@ impl Comeet {
   }
 
   #[must_use]
-  pub fn new(company_id: impl Into<String>) -> Self {
+  pub fn new(company_id: impl Into<String>, token: impl Into<String>) -> Self {
     Self {
       company_id: company_id.into(),
+      token: token.into(),
     }
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Comeet {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    let client = reqwest::Client::new();
+
+    let mut url = http::parse_url(
+      "Comeet",
+      &self.company_id,
+      format!(
+        "https://www.comeet.co/careers-api/2.0/company/{}/positions",
+        self.company_id,
+      ),
+    )?;
+
+    url
+      .query_pairs_mut()
+      .append_pair("token", &self.token)
+      .append_pair("details", "true");
+
+    let response = http::get(&client, "Comeet", &self.company_id, url).await?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Vec<Value> =
       serde_json::from_slice(response).map_err(|source| Error::Decode {
@@ -187,7 +212,7 @@ mod tests {
 
   #[test]
   fn normalizes_jobs() {
-    let adapter = Comeet::new("E5.007");
+    let adapter = Comeet::new("E5.007", "token");
 
     let response: Value = serde_json::from_slice(FIXTURE).unwrap();
 

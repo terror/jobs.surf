@@ -68,7 +68,24 @@ impl Breezy {
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Breezy {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    let client = reqwest::Client::new();
+    let mut url = http::parse_url(
+      "Breezy",
+      &self.company_slug,
+      format!("https://{}.breezy.hr/json", self.company_slug),
+    )?;
+
+    url.query_pairs_mut().append_pair("verbose", "true");
+
+    let response =
+      http::get(&client, "Breezy", &self.company_slug, url).await?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Vec<Value> =
       serde_json::from_slice(response).map_err(|source| Error::Decode {

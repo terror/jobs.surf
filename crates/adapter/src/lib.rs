@@ -18,6 +18,7 @@ pub mod breezy;
 pub mod comeet;
 mod error;
 pub mod greenhouse;
+mod http;
 pub mod lever;
 pub mod personio;
 pub mod recruitee;

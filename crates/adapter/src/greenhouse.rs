@@ -8,11 +8,24 @@ pub enum Error {
     #[source]
     source: serde_json::Error,
   },
+  #[error(
+    "Greenhouse board `{board_token}` returned {actual} jobs but reported {expected}"
+  )]
+  IncompleteSnapshot {
+    actual: usize,
+    board_token: String,
+    expected: usize,
+  },
 }
 
 #[derive(Deserialize)]
 struct Location {
   name: String,
+}
+
+#[derive(Deserialize)]
+struct Meta {
+  total: usize,
 }
 
 #[derive(Deserialize)]
@@ -27,6 +40,7 @@ struct ProviderJob {
 #[derive(Deserialize)]
 struct Response {
   jobs: Vec<Value>,
+  meta: Meta,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -48,13 +62,45 @@ impl Greenhouse {
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Greenhouse {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    let client = reqwest::Client::new();
+
+    let mut url = http::parse_url(
+      "Greenhouse",
+      &self.board_token,
+      format!(
+        "https://boards-api.greenhouse.io/v1/boards/{}/jobs",
+        self.board_token,
+      ),
+    )?;
+
+    url.query_pairs_mut().append_pair("content", "true");
+
+    let response =
+      http::get(&client, "Greenhouse", &self.board_token, url).await?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Response =
       serde_json::from_slice(response).map_err(|source| Error::Decode {
         board_token: self.board_token.clone(),
         source,
       })?;
+
+    if response.jobs.len() != response.meta.total {
+      return Err(
+        Error::IncompleteSnapshot {
+          actual: response.jobs.len(),
+          board_token: self.board_token.clone(),
+          expected: response.meta.total,
+        }
+        .into(),
+      );
+    }
 
     let jobs = response
       .jobs

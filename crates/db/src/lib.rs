@@ -1,12 +1,16 @@
 use {
-  jobs_surf_model::{Job, Source},
+  jobs_surf_model::{
+    EmploymentType, Job, JobDraft, JobSnapshot, Source, Workplace,
+  },
   sqlx::{PgPool, migrate::MigrateError, postgres::PgPoolOptions, types::Json},
+  std::num::TryFromIntError,
   thiserror::Error as ThisError,
 };
 
 #[cfg(test)]
 use {
-  sqlx::{Postgres, migrate::MigrateDatabase},
+  jobs_surf_model::JobLocation,
+  sqlx::{Postgres, migrate::MigrateDatabase, types::JsonValue},
   std::{
     process,
     sync::atomic::{AtomicUsize, Ordering},
@@ -17,7 +21,10 @@ use {
 mod db;
 mod error;
 
-pub use crate::{db::Db, error::Error};
+pub use crate::{
+  db::{Db, SyncSummary},
+  error::Error,
+};
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;
 

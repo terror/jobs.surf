@@ -104,7 +104,30 @@ impl Personio {
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Personio {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    let host = if self.account.contains('.') {
+      self.account.clone()
+    } else {
+      format!("{}.jobs.personio.de", self.account)
+    };
+
+    let client = reqwest::Client::new();
+
+    let mut url = http::parse_url(
+      "Personio",
+      &self.account,
+      format!("https://{host}/xml"),
+    )?;
+
+    url.query_pairs_mut().append_pair("language", "en");
+
+    let response = http::get(&client, "Personio", &self.account, url).await?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response =
       str::from_utf8(response).map_err(|source| Error::InvalidUtf8 {

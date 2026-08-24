@@ -72,7 +72,29 @@ impl Ashby {
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Ashby {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    let client = reqwest::Client::new();
+
+    let mut url = http::parse_url(
+      "Ashby",
+      &self.board_name,
+      format!(
+        "https://api.ashbyhq.com/posting-api/job-board/{}",
+        self.board_name,
+      ),
+    )?;
+
+    url
+      .query_pairs_mut()
+      .append_pair("includeCompensation", "true");
+
+    let response = http::get(&client, "Ashby", &self.board_name, url).await?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Response =
       serde_json::from_slice(response).map_err(|source| Error::Decode {

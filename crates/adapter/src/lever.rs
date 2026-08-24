@@ -65,7 +65,57 @@ impl Lever {
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Lever {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    const PAGE_SIZE: usize = 100;
+
+    let client = reqwest::Client::new();
+
+    let mut jobs = Vec::new();
+    let mut skip = 0;
+
+    loop {
+      let mut url = http::parse_url(
+        "Lever",
+        &self.site,
+        format!("https://api.lever.co/v0/postings/{}", self.site),
+      )?;
+
+      url
+        .query_pairs_mut()
+        .append_pair("mode", "json")
+        .append_pair("limit", &PAGE_SIZE.to_string())
+        .append_pair("skip", &skip.to_string());
+
+      let response = http::get(&client, "Lever", &self.site, url).await?;
+
+      let page: Vec<Value> =
+        serde_json::from_slice(&response).map_err(|source| Error::Decode {
+          site: self.site.clone(),
+          source,
+        })?;
+
+      let page_len = page.len();
+
+      jobs.extend(page);
+
+      if page_len < PAGE_SIZE {
+        break;
+      }
+
+      skip += PAGE_SIZE;
+    }
+
+    let response =
+      serde_json::to_vec(&jobs).map_err(|source| Error::Decode {
+        site: self.site.clone(),
+        source,
+      })?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Vec<Value> =
       serde_json::from_slice(response).map_err(|source| Error::Decode {

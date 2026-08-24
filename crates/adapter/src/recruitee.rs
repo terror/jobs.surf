@@ -86,7 +86,23 @@ impl Recruitee {
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Recruitee {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    let client = reqwest::Client::new();
+
+    let url = http::parse_url(
+      "Recruitee",
+      &self.company_slug,
+      format!("https://{}.recruitee.com/api/offers/", self.company_slug),
+    )?;
+
+    let response =
+      http::get(&client, "Recruitee", &self.company_slug, url).await?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Response =
       serde_json::from_slice(response).map_err(|source| Error::Decode {

@@ -67,7 +67,24 @@ impl Workable {
   }
 }
 
+#[async_trait::async_trait]
 impl Adapter for Workable {
+  async fn fetch(&self) -> Result<JobSnapshot> {
+    let client = reqwest::Client::new();
+
+    let mut url = http::parse_url(
+      "Workable",
+      &self.account,
+      format!("https://www.workable.com/api/accounts/{}", self.account),
+    )?;
+
+    url.query_pairs_mut().append_pair("details", "true");
+
+    let response = http::get(&client, "Workable", &self.account, url).await?;
+
+    self.normalize(&response)
+  }
+
   fn normalize(&self, response: &[u8]) -> Result<JobSnapshot> {
     let response: Response =
       serde_json::from_slice(response).map_err(|source| Error::Decode {
