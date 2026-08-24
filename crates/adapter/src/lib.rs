@@ -8,7 +8,7 @@ use {
   roxmltree::{Document, Node},
   serde::Deserialize,
   serde_json::Value,
-  std::str,
+  std::{collections::HashMap, str},
   url::Url,
 };
 
@@ -21,6 +21,7 @@ pub mod greenhouse;
 pub mod lever;
 pub mod personio;
 pub mod recruitee;
+pub mod teamtailor;
 pub mod workable;
 
 pub use crate::{adapter::Adapter, error::Error};

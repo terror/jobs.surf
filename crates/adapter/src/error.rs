@@ -17,5 +17,7 @@ pub enum Error {
   #[error(transparent)]
   Recruitee(#[from] recruitee::Error),
   #[error(transparent)]
+  Teamtailor(#[from] teamtailor::Error),
+  #[error(transparent)]
   Workable(#[from] workable::Error),
 }

@@ -1,0 +1,96 @@
+{
+  "data": [
+    {
+      "id": "101",
+      "type": "jobs",
+      "attributes": {
+        "title": "Senior Rust Engineer",
+        "body": "<p>Build reliable recruiting systems.</p>",
+        "remote-status": "fully",
+        "employment-type": "fully",
+        "external-application-url": "https://careers.acme.com/jobs/101/apply"
+      },
+      "links": {
+        "careersite-job-url": "https://jobs.teamtailor.com/acme/jobs/101",
+        "careersite-job-apply-url": "https://jobs.teamtailor.com/acme/jobs/101/apply"
+      },
+      "relationships": {
+        "locations": {
+          "data": [
+            {
+              "type": "locations",
+              "id": "stockholm"
+            },
+            {
+              "type": "locations",
+              "id": "berlin"
+            }
+          ]
+        }
+      },
+      "future-provider-field": {
+        "nested": true
+      }
+    },
+    {
+      "id": "102",
+      "type": "jobs",
+      "attributes": {
+        "title": "Platform Engineer",
+        "body": null,
+        "remote-status": "none",
+        "employment-type": "contract",
+        "external-application-url": null
+      },
+      "links": {
+        "careersite-job-url": "https://jobs.teamtailor.com/acme/jobs/102",
+        "careersite-job-apply-url": "https://jobs.teamtailor.com/acme/jobs/102/apply"
+      },
+      "relationships": {
+        "locations": {
+          "data": [
+            {
+              "type": "locations",
+              "id": "london"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "berlin",
+      "type": "locations",
+      "attributes": {
+        "name": "",
+        "city": "Berlin",
+        "country": "Germany"
+      }
+    },
+    {
+      "id": "london",
+      "type": "locations",
+      "attributes": {
+        "name": "London",
+        "city": "London",
+        "country": "United Kingdom"
+      }
+    },
+    {
+      "id": "stockholm",
+      "type": "locations",
+      "attributes": {
+        "name": "Stockholm HQ",
+        "city": "Stockholm",
+        "country": "Sweden"
+      }
+    }
+  ],
+  "links": {
+    "next": null
+  },
+  "meta": {
+    "page-count": 1
+  }
+}

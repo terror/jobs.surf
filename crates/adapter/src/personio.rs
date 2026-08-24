@@ -166,6 +166,7 @@ impl Adapter for Personio {
             }
           })
           .collect::<String>();
+
         let description_html =
           (!description_html.is_empty()).then_some(description_html);
 

@@ -10,6 +10,7 @@ pub enum AdapterConfig {
   Lever { site: String },
   Personio { account: String },
   Recruitee { company_slug: String },
+  Teamtailor { company: String },
   Workable { account: String },
 }
 
