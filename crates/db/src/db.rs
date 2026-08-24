@@ -1,4 +1,4 @@
-use {super::*, crate::job_row::JobRow};
+use super::*;
 
 #[derive(Clone, Debug)]
 pub struct Db {

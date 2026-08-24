@@ -1,6 +1,8 @@
 use {
+  crate::job_row::JobRow,
+  chrono::{DateTime, Utc},
   jobs_surf_model::{
-    EmploymentType, Job, JobDraft, JobSnapshot, Source, Workplace,
+    EmploymentType, Job, JobDraft, JobLocation, JobSnapshot, Source, Workplace,
   },
   sqlx::{PgPool, migrate::MigrateError, postgres::PgPoolOptions, types::Json},
   std::num::{NonZeroU16, TryFromIntError},
@@ -9,7 +11,6 @@ use {
 
 #[cfg(test)]
 use {
-  jobs_surf_model::JobLocation,
   sqlx::{Postgres, migrate::MigrateDatabase, types::JsonValue},
   std::{
     process,

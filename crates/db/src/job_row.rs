@@ -1,8 +1,4 @@
-use {
-  chrono::{DateTime, Utc},
-  jobs_surf_model::JobLocation,
-  sqlx::types::Json,
-};
+use super::*;
 
 #[derive(sqlx::FromRow)]
 pub(crate) struct JobRow {

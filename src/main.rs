@@ -3,16 +3,45 @@ use {
     arguments::Arguments, options::Options, state::State,
     subcommand::Subcommand,
   },
+  ammonia::clean,
   anyhow::Context,
-  axum::Router,
+  axum::{
+    Json, Router,
+    extract::{Query, State as AppState},
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::{MethodRouter, get},
+  },
+  base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD},
+  chrono::{DateTime, Utc},
   clap::{Args, Parser},
   dotenv::dotenv,
-  jobs_surf_db::Db,
-  std::{net::SocketAddr, process},
+  jobs_surf::config::Config,
+  jobs_surf_db::{Db, JobCursor, JobRecord},
+  jobs_surf_model::{JobLocation, Source},
+  serde::{Deserialize, Serialize},
+  std::{fs, net::SocketAddr, num::NonZeroU16, path::PathBuf, process},
+  thiserror::Error as ThisError,
   tokio::net::TcpListener,
   tower_http::trace::TraceLayer,
-  tracing::info,
+  tracing::{error, info},
   tracing_subscriber::EnvFilter,
+};
+
+#[cfg(test)]
+use {
+  axum::{
+    body::{Body, to_bytes},
+    http::{Method, Request},
+  },
+  jobs_surf_model::{JobDraft, JobSnapshot},
+  serde_json::{Value, json},
+  sqlx::{Postgres, migrate::MigrateDatabase},
+  std::{
+    sync::atomic::{AtomicUsize, Ordering},
+    time::{SystemTime, UNIX_EPOCH},
+  },
+  tower::ServiceExt,
 };
 
 mod arguments;

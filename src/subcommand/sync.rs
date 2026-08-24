@@ -1,9 +1,4 @@
-use {
-  super::*,
-  jobs_surf::config::Config,
-  jobs_surf_model::Source,
-  std::{fs, path::PathBuf},
-};
+use super::*;
 
 #[derive(Args, Debug)]
 pub(crate) struct Sync {

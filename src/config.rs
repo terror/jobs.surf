@@ -1,12 +1,4 @@
-use {
-  jobs_surf_adapter::{
-    Adapter, ashby::Ashby, breezy::Breezy, comeet::Comeet,
-    greenhouse::Greenhouse, lever::Lever, personio::Personio,
-    recruitee::Recruitee, teamtailor::Teamtailor, workable::Workable,
-  },
-  serde::Deserialize,
-  serde_json::Value,
-};
+use super::*;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "type")]

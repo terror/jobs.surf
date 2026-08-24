@@ -1,8 +1,4 @@
-use {
-  crate::job_row::JobRow,
-  chrono::{DateTime, Utc},
-  jobs_surf_model::JobLocation,
-};
+use super::*;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct JobRecord {

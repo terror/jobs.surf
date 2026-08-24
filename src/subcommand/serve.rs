@@ -34,22 +34,7 @@ impl Serve {
 
 #[cfg(test)]
 mod tests {
-  use {
-    super::*,
-    axum::{
-      body::{Body, to_bytes},
-      http::{Method, Request, StatusCode},
-      response::Response,
-    },
-    jobs_surf_model::{JobDraft, JobLocation, JobSnapshot, Source},
-    serde_json::{Value, json},
-    sqlx::{Postgres, migrate::MigrateDatabase},
-    std::{
-      sync::atomic::{AtomicUsize, Ordering},
-      time::{SystemTime, UNIX_EPOCH},
-    },
-    tower::ServiceExt,
-  };
+  use super::*;
 
   static TEST_DATABASE_NUMBER: AtomicUsize = AtomicUsize::new(0);
 

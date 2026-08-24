@@ -1,4 +1,4 @@
-use crate::{JobCursor, JobRecord};
+use super::*;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct JobPage {

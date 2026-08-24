@@ -1,12 +1,4 @@
-use {
-  crate::state::State,
-  axum::{
-    extract::State as AppState,
-    http::StatusCode,
-    routing::{MethodRouter, get},
-  },
-  tracing::error,
-};
+use super::*;
 
 pub(super) fn route() -> MethodRouter<State> {
   get(get_health)

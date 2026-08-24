@@ -1,22 +1,4 @@
-use {
-  crate::state::State,
-  ammonia::clean,
-  axum::{
-    Json,
-    extract::{Query, State as AppState},
-    http::StatusCode,
-    response::{IntoResponse, Response},
-    routing::{MethodRouter, get},
-  },
-  base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD},
-  chrono::{DateTime, Utc},
-  jobs_surf_db::{JobCursor, JobRecord},
-  jobs_surf_model::JobLocation,
-  serde::{Deserialize, Serialize},
-  std::num::NonZeroU16,
-  thiserror::Error as ThisError,
-  tracing::error,
-};
+use super::*;
 
 const DEFAULT_LIMIT: u16 = 20;
 const MAX_LIMIT: u16 = 100;
@@ -89,10 +71,13 @@ async fn get_jobs(
   Query(query): Query<JobsQuery>,
 ) -> Result<Json<JobsResponse>> {
   let limit = query.limit.unwrap_or(DEFAULT_LIMIT);
+
   let limit = NonZeroU16::new(limit)
     .filter(|limit| limit.get() <= MAX_LIMIT)
     .ok_or(Error::InvalidLimit)?;
+
   let cursor = query.cursor.as_deref().map(decode_cursor).transpose()?;
+
   let page = state.db.list_jobs(cursor, limit).await?;
 
   Ok(Json(JobsResponse {
@@ -105,6 +90,7 @@ fn decode_cursor(value: &str) -> Result<JobCursor> {
   let bytes = URL_SAFE_NO_PAD
     .decode(value)
     .map_err(|_| Error::InvalidCursor)?;
+
   let cursor = serde_json::from_slice::<Cursor>(&bytes)
     .map_err(|_| Error::InvalidCursor)?;
 

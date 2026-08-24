@@ -3,6 +3,7 @@ use {
   serde::{Deserialize, Serialize},
   serde_json::Value,
   std::{
+    collections::HashSet,
     fmt::{self, Display, Formatter},
     str::FromStr,
   },
