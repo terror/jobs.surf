@@ -1,0 +1,8 @@
+[[sources]]
+id = "acme-careers"
+organization = "Acme"
+enabled = true
+
+[sources.adapter]
+type = "greenhouse"
+board_token = "acme"

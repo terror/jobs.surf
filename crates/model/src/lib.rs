@@ -7,16 +7,19 @@ use {
     str::FromStr,
   },
   thiserror::Error as ThisError,
+  url::Url,
 };
 
 mod error;
 mod job;
+mod job_draft;
 mod source;
 mod sync_run;
 
 pub use crate::{
   error::Error,
   job::Job,
+  job_draft::{EmploymentType, JobDraft, JobLocation, JobSnapshot, Workplace},
   source::Source,
   sync_run::{SyncRun, SyncRunStatus},
 };

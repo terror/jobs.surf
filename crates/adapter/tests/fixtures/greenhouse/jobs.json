@@ -1,0 +1,34 @@
+{
+  "jobs": [
+    {
+      "absolute_url": "https://boards.greenhouse.io/acme/jobs/127817",
+      "content": "&lt;p&gt;Build reliable systems &amp; tools.&lt;/p&gt;",
+      "departments": [
+        {
+          "id": 13583,
+          "name": "Engineering"
+        }
+      ],
+      "future_provider_field": {
+        "nested": true
+      },
+      "id": 127817,
+      "internal_job_id": 144381,
+      "location": {
+        "name": "New York, NY"
+      },
+      "title": "Rust Engineer",
+      "updated_at": "2026-08-20T10:55:28-04:00"
+    },
+    {
+      "absolute_url": "https://boards.greenhouse.io/acme/jobs/127818",
+      "id": 127818,
+      "internal_job_id": null,
+      "title": "General Application",
+      "updated_at": "2026-08-21T10:55:28-04:00"
+    }
+  ],
+  "meta": {
+    "total": 2
+  }
+}
