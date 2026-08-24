@@ -173,6 +173,34 @@ impl Db {
     Ok(())
   }
 
+  /// Returns an open job by its internal identifier.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the query fails.
+  pub async fn get_job(&self, id: i64) -> Result<Option<JobRecord>> {
+    let row = sqlx::query_as::<_, JobRow>(
+      "SELECT
+         apply_url,
+         description_html,
+         employment_type,
+         first_seen_at,
+         id,
+         locations,
+         published_at,
+         source_id,
+         title,
+         workplace
+       FROM jobs
+       WHERE id = $1 AND closed_at IS NULL",
+    )
+    .bind(id)
+    .fetch_optional(&self.pool)
+    .await?;
+
+    Ok(row.map(JobRecord::from))
+  }
+
   /// Inserts a job.
   ///
   /// # Errors
@@ -240,6 +268,9 @@ impl Db {
     &self,
     cursor: Option<JobCursor>,
     limit: NonZeroU16,
+    query: Option<&str>,
+    remote: Option<bool>,
+    source_id: Option<&str>,
   ) -> Result<JobPage> {
     let query_limit = i64::from(limit.get()) + 1;
 
@@ -258,10 +289,22 @@ impl Db {
            workplace
          FROM jobs
          WHERE closed_at IS NULL
-           AND (first_seen_at, id) < ($1, $2)
+           AND (
+             $1::TEXT IS NULL
+             OR search_vector @@ WEBSEARCH_TO_TSQUERY('english'::REGCONFIG, $1)
+           )
+           AND (
+             $2::BOOLEAN IS NULL
+             OR COALESCE(workplace = 'remote', FALSE) = $2
+           )
+           AND ($3::TEXT IS NULL OR source_id = $3)
+           AND (first_seen_at, id) < ($4, $5)
          ORDER BY first_seen_at DESC, id DESC
-         LIMIT $3",
+         LIMIT $6",
       )
+      .bind(query)
+      .bind(remote)
+      .bind(source_id)
       .bind(cursor.first_seen_at)
       .bind(cursor.id)
       .bind(query_limit)
@@ -282,9 +325,21 @@ impl Db {
            workplace
          FROM jobs
          WHERE closed_at IS NULL
+           AND (
+             $1::TEXT IS NULL
+             OR search_vector @@ WEBSEARCH_TO_TSQUERY('english'::REGCONFIG, $1)
+           )
+           AND (
+             $2::BOOLEAN IS NULL
+             OR COALESCE(workplace = 'remote', FALSE) = $2
+           )
+           AND ($3::TEXT IS NULL OR source_id = $3)
          ORDER BY first_seen_at DESC, id DESC
-         LIMIT $1",
+         LIMIT $4",
       )
+      .bind(query)
+      .bind(remote)
+      .bind(source_id)
       .bind(query_limit)
       .fetch_all(&self.pool)
       .await?
@@ -307,6 +362,23 @@ impl Db {
     };
 
     Ok(JobPage { jobs, next_cursor })
+  }
+
+  /// Returns all known sources in deterministic display order.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the query fails.
+  pub async fn list_sources(&self) -> Result<Vec<SourceRecord>> {
+    Ok(
+      sqlx::query_as::<_, SourceRecord>(
+        "SELECT adapter, id, organization
+         FROM sources
+         ORDER BY organization, id",
+      )
+      .fetch_all(&self.pool)
+      .await?,
+    )
   }
 
   /// Verifies that `PostgreSQL` is reachable.

@@ -24,11 +24,13 @@ mod job_cursor;
 mod job_page;
 mod job_record;
 mod job_row;
+mod source_record;
 mod sync_summary;
 
 pub use crate::{
   db::Db, error::Error, job_cursor::JobCursor, job_page::JobPage,
-  job_record::JobRecord, sync_summary::SyncSummary,
+  job_record::JobRecord, source_record::SourceRecord,
+  sync_summary::SyncSummary,
 };
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;

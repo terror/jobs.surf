@@ -4,6 +4,7 @@ use super::*;
 #[utoipa::path(
   get,
   path = "/healthz",
+  operation_id = "getHealth",
   responses(
     (status = 200, description = "Service is healthy", body = String),
     (status = 503, description = "Database is unavailable"),

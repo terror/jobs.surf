@@ -11,8 +11,14 @@ pub(super) enum Error {
   CursorEncoding(#[source] serde_json::Error),
   #[error("invalid pagination cursor")]
   InvalidCursor,
+  #[error("invalid job id")]
+  InvalidJobId,
   #[error("invalid pagination limit")]
   InvalidLimit,
+  #[error("invalid query parameters")]
+  InvalidQuery,
+  #[error("job not found")]
+  JobNotFound,
   #[error(transparent)]
   Repository(#[from] jobs_surf_db::Error),
 }
@@ -21,11 +27,16 @@ impl IntoResponse for Error {
   fn into_response(self) -> Response {
     let (status, message) = match self {
       Self::InvalidCursor => (StatusCode::BAD_REQUEST, "invalid cursor"),
+      Self::InvalidJobId => (StatusCode::BAD_REQUEST, "invalid job id"),
       Self::InvalidLimit => {
         (StatusCode::BAD_REQUEST, "limit must be between 1 and 100")
       }
+      Self::InvalidQuery => {
+        (StatusCode::BAD_REQUEST, "invalid query parameters")
+      }
+      Self::JobNotFound => (StatusCode::NOT_FOUND, "job not found"),
       Self::CursorEncoding(_) | Self::Repository(_) => {
-        error!(%self, "failed to list jobs");
+        error!(%self, "failed to read jobs");
         (StatusCode::INTERNAL_SERVER_ERROR, "internal server error")
       }
     };
@@ -60,14 +71,8 @@ impl From<JobCursor> for Cursor {
 }
 
 #[derive(Serialize, ToSchema)]
-struct ErrorResponse {
-  /// Human-readable error message.
-  error: &'static str,
-}
-
-#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
-struct JobResponse {
+pub(super) struct JobResponse {
   /// URL where candidates can apply for the job.
   apply_url: String,
   /// Sanitized HTML description supplied by the job source.
@@ -114,6 +119,12 @@ pub(super) struct JobsQuery {
   /// Number of jobs to return.
   #[param(default = 20, maximum = 100, minimum = 1)]
   limit: Option<u16>,
+  /// Full-text search across job titles and descriptions.
+  query: Option<String>,
+  /// Whether to return only fully remote or only non-remote jobs.
+  remote: Option<bool>,
+  /// Exact source identifier to match.
+  source: Option<String>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -137,18 +148,51 @@ impl From<JobLocation> for LocationResponse {
   }
 }
 
+/// Returns one open job by its jobs.surf identifier.
+#[utoipa::path(
+  get,
+  path = "/v1/jobs/{id}",
+  operation_id = "getJob",
+  params(
+    ("id" = String, Path, description = "Positive decimal job identifier"),
+  ),
+  responses(
+    (status = 200, description = "Open job", body = JobResponse),
+    (status = 400, description = "Invalid job identifier", body = ErrorResponse),
+    (status = 404, description = "Job not found", body = ErrorResponse),
+    (status = 500, description = "Failed to get job", body = ErrorResponse),
+  ),
+  tag = "jobs",
+)]
+pub(super) async fn get_job(
+  AppState(state): AppState<State>,
+  Path(id): Path<String>,
+) -> Result<Json<JobResponse>> {
+  let id = id
+    .parse::<i64>()
+    .ok()
+    .filter(|id| *id > 0)
+    .ok_or(Error::InvalidJobId)?;
+
+  let job = state.db.get_job(id).await?.ok_or(Error::JobNotFound)?;
+
+  Ok(Json(JobResponse::from(job)))
+}
+
 /// Lists open jobs in newest-first order.
 ///
-/// Pass `nextCursor` from a response as `cursor` to retrieve the next page.
+/// Pass `nextCursor` from a response as `cursor` and repeat the same filters to
+/// retrieve the next page.
 #[utoipa::path(
   get,
   path = "/v1/jobs",
+  operation_id = "listJobs",
   params(JobsQuery),
   responses(
     (status = 200, description = "Open jobs", body = JobsResponse),
     (
       status = 400,
-      description = "Invalid pagination parameters",
+      description = "Invalid query parameters",
       body = ErrorResponse,
     ),
     (
@@ -161,8 +205,9 @@ impl From<JobLocation> for LocationResponse {
 )]
 pub(super) async fn get_jobs(
   AppState(state): AppState<State>,
-  Query(query): Query<JobsQuery>,
+  query: std::result::Result<Query<JobsQuery>, QueryRejection>,
 ) -> Result<Json<JobsResponse>> {
+  let Query(query) = query.map_err(|_| Error::InvalidQuery)?;
   let limit = query.limit.unwrap_or(DEFAULT_LIMIT);
 
   let limit = NonZeroU16::new(limit)
@@ -188,7 +233,22 @@ pub(super) async fn get_jobs(
     })
     .transpose()?;
 
-  let page = state.db.list_jobs(cursor, limit).await?;
+  let normalized_query = query
+    .query
+    .as_deref()
+    .map(str::trim)
+    .filter(|query| !query.is_empty());
+
+  let page = state
+    .db
+    .list_jobs(
+      cursor,
+      limit,
+      normalized_query,
+      query.remote,
+      query.source.as_deref(),
+    )
+    .await?;
 
   Ok(Json(JobsResponse {
     jobs: page.jobs.into_iter().map(JobResponse::from).collect(),
