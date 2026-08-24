@@ -10,7 +10,7 @@ pub(crate) enum Subcommand {
   Openapi(openapi::Openapi),
   #[command(about = "Start the server")]
   Serve(serve::Serve),
-  #[command(about = "Synchronize a configured job source")]
+  #[command(about = "Synchronize configured job sources")]
   Sync(sync::Sync),
 }
 

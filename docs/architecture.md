@@ -60,7 +60,8 @@ fields use optional values rather than placeholder strings.
 
 ## Synchronization
 
-`jobs-surf sync --source <id>` performs this sequence:
+`jobs-surf sync` synchronizes every enabled configured source sequentially.
+`jobs-surf sync --source <id>` runs the same flow for one source:
 
 1. Parse typed source configuration.
 2. Reject missing, duplicate, or disabled source selections.
@@ -76,9 +77,8 @@ Any error after step 3 marks the run failed. Failed fetches and invalid or
 partial snapshots do not modify jobs. A run cannot overwrite a source after a
 newer successful run has completed.
 
-Synchronization is currently invoked one source at a time. Scheduling,
-config-wide reconciliation, automatic retries, and disabling jobs from removed
-sources remain external operational concerns.
+Scheduling, config-wide disabling or removal reconciliation, automatic retries,
+and disabling jobs from removed sources remain external operational concerns.
 
 ## Persistence
 

@@ -9,8 +9,8 @@ pub(crate) struct Sync {
     long
   )]
   config: PathBuf,
-  #[arg(help = "ID of the source to synchronize", long)]
-  source: String,
+  #[arg(help = "ID of one source to synchronize", long)]
+  source: Option<String>,
 }
 
 impl Sync {
@@ -23,36 +23,79 @@ impl Sync {
       format!("failed to parse config `{}`", self.config.display())
     })?;
 
-    let mut sources = config
-      .sources
-      .into_iter()
-      .filter(|source| source.id == self.source);
+    let syncing_all = self.source.is_none();
+    let sources = if let Some(source_id) = &self.source {
+      let mut sources = config
+        .sources
+        .into_iter()
+        .filter(|source| source.id == *source_id);
 
-    let source = sources
-      .next()
-      .with_context(|| format!("source `{}` is not configured", self.source))?;
+      let source = sources
+        .next()
+        .with_context(|| format!("source `{source_id}` is not configured"))?;
 
-    if sources.next().is_some() {
-      anyhow::bail!("source `{}` is configured more than once", self.source);
-    }
+      if sources.next().is_some() {
+        anyhow::bail!("source `{source_id}` is configured more than once");
+      }
 
-    if !source.enabled {
-      anyhow::bail!("source `{}` is disabled", source.id);
-    }
+      if !source.enabled {
+        anyhow::bail!("source `{source_id}` is disabled");
+      }
 
-    let (adapter, configuration) = source.adapter.adapter();
+      vec![source]
+    } else {
+      let mut ids = HashSet::with_capacity(config.sources.len());
 
-    let database_source = Source {
-      adapter: source.adapter.kind().into(),
-      configuration,
-      enabled: source.enabled,
-      id: source.id,
-      organization: source.organization,
+      for source in &config.sources {
+        if !ids.insert(&source.id) {
+          anyhow::bail!("source `{}` is configured more than once", source.id);
+        }
+      }
+
+      config
+        .sources
+        .into_iter()
+        .filter(|source| source.enabled)
+        .collect()
     };
 
     let db = Db::connect(&options.db_url).await?;
+    let mut failures = Vec::new();
 
-    synchronize(&db, &database_source, adapter.as_ref()).await
+    for source in sources {
+      let (adapter, configuration) = source.adapter.adapter();
+
+      let database_source = Source {
+        adapter: source.adapter.kind().into(),
+        configuration,
+        enabled: source.enabled,
+        id: source.id,
+        organization: source.organization,
+      };
+
+      if let Err(error) =
+        synchronize(&db, &database_source, adapter.as_ref()).await
+      {
+        if !syncing_all {
+          return Err(error);
+        }
+
+        error!(source = %database_source.id, %error, "sync failed");
+        failures.push((database_source.id, error));
+      }
+    }
+
+    if failures.is_empty() {
+      Ok(())
+    } else {
+      let errors = failures
+        .into_iter()
+        .map(|(source, error)| format!("{source}: {error:#}"))
+        .collect::<Vec<_>>()
+        .join("\n");
+
+      anyhow::bail!("one or more source syncs failed:\n{errors}");
+    }
   }
 }
 

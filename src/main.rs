@@ -26,7 +26,10 @@ use {
   jobs_surf_model::{JobLocation, Source},
   serde::{Deserialize, Serialize},
   serde_json::Value,
-  std::{fs, net::SocketAddr, num::NonZeroU16, path::PathBuf, process},
+  std::{
+    collections::HashSet, fs, net::SocketAddr, num::NonZeroU16, path::PathBuf,
+    process,
+  },
   tokio::net::TcpListener,
   tower_http::trace::TraceLayer,
   tracing::{error, info},
