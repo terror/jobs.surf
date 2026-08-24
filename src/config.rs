@@ -8,6 +8,7 @@ pub enum AdapterConfig {
   Comeet { company_id: String },
   Greenhouse { board_token: String },
   Lever { site: String },
+  Personio { account: String },
   Recruitee { company_slug: String },
   Workable { account: String },
 }

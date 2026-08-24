@@ -4,8 +4,11 @@ use {
   jobs_surf_model::{
     EmploymentType, JobDraft, JobLocation, JobSnapshot, Workplace,
   },
+  quick_xml::de,
+  roxmltree::{Document, Node},
   serde::Deserialize,
   serde_json::Value,
+  std::str,
   url::Url,
 };
 
@@ -16,6 +19,7 @@ pub mod comeet;
 mod error;
 pub mod greenhouse;
 pub mod lever;
+pub mod personio;
 pub mod recruitee;
 pub mod workable;
 
