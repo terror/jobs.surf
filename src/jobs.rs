@@ -139,34 +139,37 @@ async fn get_jobs(
     .filter(|limit| limit.get() <= MAX_LIMIT)
     .ok_or(Error::InvalidLimit)?;
 
-  let cursor = query.cursor.as_deref().map(decode_cursor).transpose()?;
+  let cursor = query
+    .cursor
+    .as_deref()
+    .map(|value| {
+      let bytes = URL_SAFE_NO_PAD
+        .decode(value)
+        .map_err(|_| Error::InvalidCursor)?;
+
+      let cursor = serde_json::from_slice::<Cursor>(&bytes)
+        .map_err(|_| Error::InvalidCursor)?;
+
+      if cursor.id <= 0 {
+        return Err(Error::InvalidCursor);
+      }
+
+      Ok(cursor.into())
+    })
+    .transpose()?;
 
   let page = state.db.list_jobs(cursor, limit).await?;
 
   Ok(Json(JobsResponse {
     jobs: page.jobs.into_iter().map(JobResponse::from).collect(),
-    next_cursor: page.next_cursor.map(encode_cursor).transpose()?,
+    next_cursor: page
+      .next_cursor
+      .map(|cursor| -> Result<String> {
+        let bytes = serde_json::to_vec(&Cursor::from(cursor))
+          .map_err(Error::CursorEncoding)?;
+
+        Ok(URL_SAFE_NO_PAD.encode(bytes))
+      })
+      .transpose()?,
   }))
-}
-
-fn decode_cursor(value: &str) -> Result<JobCursor> {
-  let bytes = URL_SAFE_NO_PAD
-    .decode(value)
-    .map_err(|_| Error::InvalidCursor)?;
-
-  let cursor = serde_json::from_slice::<Cursor>(&bytes)
-    .map_err(|_| Error::InvalidCursor)?;
-
-  if cursor.id <= 0 {
-    return Err(Error::InvalidCursor);
-  }
-
-  Ok(cursor.into())
-}
-
-fn encode_cursor(cursor: JobCursor) -> Result<String> {
-  let bytes =
-    serde_json::to_vec(&Cursor::from(cursor)).map_err(Error::CursorEncoding)?;
-
-  Ok(URL_SAFE_NO_PAD.encode(bytes))
 }
