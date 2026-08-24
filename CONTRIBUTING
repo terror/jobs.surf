@@ -1,6 +1,20 @@
 Contributing
 ============
 
+Development requires Rust, Docker, Bun 1.3.14, and PostgreSQL. Run the local
+database with `just services`, install frontend dependencies with
+`bun install --cwd www`, and use `just all` for the standard backend and
+frontend checks.
+
+The OpenAPI contract and TypeScript client are generated files. Do not edit
+`openapi/jobs-surf.json` or `www/src/client/` manually. Run
+`just www-generate` after changing an HTTP handler or schema, and commit the
+result with the related API change.
+
+Keep provider DTOs inside their adapter and keep raw provider payloads out of
+the public API. Provider tests must use committed fixtures or local HTTP
+servers, never live career pages.
+
 Unless you explicitly state otherwise, any contribution intentionally
 submitted for inclusion in the work by you shall be licensed as in
 LICENSE, without any additional terms or conditions.
