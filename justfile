@@ -3,6 +3,7 @@ set dotenv-load
 default:
   just --list
 
+alias d := dev
 alias f := fmt
 alias r := run
 alias t := test
@@ -41,6 +42,22 @@ forbid:
 [group: 'misc']
 install:
   cargo install -f jobs-surf
+
+[group: 'dev']
+dev: services
+  bun run --cwd www concurrently \
+    --kill-others \
+    --names 'SERVER,CLIENT' \
+    --prefix-colors 'green.bold,magenta.bold' \
+    --prefix '[{name}] ' \
+    --prefix-length 2 \
+    --success first \
+    --handle-input \
+    --timestamp-format 'HH:mm:ss' \
+    --color \
+    -- \
+    'just watch run -- serve' \
+    'just www-dev'
 
 [group: 'dev']
 install-dev-deps:
