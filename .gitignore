@@ -5,6 +5,7 @@
 .env
 .env.local
 .idea/
+.playwright-mcp/
 .vscode/
 /target
 Thumbs.db

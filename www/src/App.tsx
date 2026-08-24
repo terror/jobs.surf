@@ -4,9 +4,7 @@ import {
   ChevronRight,
   CircleAlert,
   MapPin,
-  Radio,
   Search,
-  SlidersHorizontal,
   Waves,
 } from "lucide-react"
 import {
@@ -29,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
   SheetContent,
@@ -118,16 +115,16 @@ function JobDetail({
 
   return (
     <Sheet open onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="w-full overflow-y-auto border-l-4 border-l-primary p-0 sm:max-w-2xl">
-        <SheetHeader className="border-b bg-secondary/45 px-6 py-8 pr-14 sm:px-10">
-          <div className="mb-4 flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            <Radio className="size-3.5 text-accent-foreground" />
-            Open position
+      <SheetContent className="w-full overflow-y-auto border-l-2 border-l-primary bg-background p-0 shadow-[-6px_0_0_var(--accent)] sm:max-w-2xl">
+        <SheetHeader className="border-b-2 border-primary bg-secondary px-6 py-8 pr-14 sm:px-10">
+          <div className="mb-4 flex items-center gap-2 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="size-2 bg-accent ring-1 ring-primary" />
+            position / open
           </div>
-          <SheetTitle className="font-display text-3xl leading-[1.05] sm:text-5xl">
+          <SheetTitle className="text-2xl font-extrabold leading-tight tracking-[-0.04em] sm:text-4xl">
             {job?.title ?? "Loading position..."}
           </SheetTitle>
-          <SheetDescription className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-foreground/70">
+          <SheetDescription className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-foreground/70 sm:text-sm">
             <span>{source?.organization ?? job?.sourceId ?? "jobs.surf"}</span>
             {job?.locations.length ? (
               <>
@@ -140,7 +137,7 @@ function JobDetail({
 
         <div className="px-6 py-7 sm:px-10">
           {error ? (
-            <div className="flex gap-3 border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+            <div className="flex gap-3 border-2 border-destructive bg-destructive/5 p-4 text-sm text-destructive">
               <CircleAlert className="mt-0.5 size-4 shrink-0" />
               {error}
             </div>
@@ -159,19 +156,30 @@ function JobDetail({
             <>
               <div className="mb-7 flex flex-wrap gap-2">
                 {job.workplace ? (
-                  <Badge variant="secondary" className="capitalize">
+                  <Badge
+                    variant="secondary"
+                    className="rounded-[1px] border border-primary/30 uppercase"
+                  >
                     {humanize(job.workplace)}
                   </Badge>
                 ) : null}
                 {job.employmentType ? (
-                  <Badge variant="outline" className="capitalize">
+                  <Badge
+                    variant="outline"
+                    className="rounded-[1px] border-primary/30 uppercase"
+                  >
                     {humanize(job.employmentType)}
                   </Badge>
                 ) : null}
-                <Badge variant="outline">{formatDate(job.publishedAt)}</Badge>
+                <Badge
+                  variant="outline"
+                  className="rounded-[1px] border-primary/30 uppercase"
+                >
+                  {formatDate(job.publishedAt)}
+                </Badge>
               </div>
 
-              <Separator className="mb-7" />
+              <hr className="mb-7 h-px border-0 bg-primary/20" />
 
               {job.descriptionHtml ? (
                 <div
@@ -188,11 +196,14 @@ function JobDetail({
         </div>
 
         {job ? (
-          <SheetFooter className="sticky bottom-0 border-t bg-background/95 px-6 py-4 backdrop-blur sm:px-10">
-            <Button asChild size="lg" className="w-full sm:w-auto">
+          <SheetFooter className="sticky bottom-0 border-t-2 border-primary bg-background/95 px-6 py-4 backdrop-blur sm:px-10">
+            <Button
+              asChild
+              className="tp-button h-11 w-full rounded-[2px] border-2 border-primary bg-accent px-5 text-accent-foreground hover:bg-accent/90 sm:w-auto"
+            >
               <a href={job.applyUrl} rel="noreferrer" target="_blank">
                 Apply at {source?.organization ?? "source"}
-                <ArrowUpRight data-icon="inline-end" />
+                <ArrowUpRight />
               </a>
             </Button>
           </SheetFooter>
@@ -216,44 +227,50 @@ function JobRow({
   return (
     <button
       type="button"
-      className="group grid w-full grid-cols-[1fr_auto] gap-4 border-b border-border/80 px-4 py-5 text-left transition-colors hover:bg-card focus-visible:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_13rem_auto] sm:items-center sm:px-6"
+      className="group grid w-full grid-cols-[1fr_auto] gap-4 border-b border-primary/20 px-4 py-5 text-left transition-colors hover:bg-secondary/45 focus-visible:bg-secondary/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_15rem_auto] sm:items-center sm:px-6"
       onClick={() => onSelect(job.id)}
     >
       <span className="min-w-0">
-        <span className="mb-1 block font-mono text-[0.65rem] font-semibold uppercase tracking-[0.17em] text-accent-foreground">
+        <span className="mb-1.5 block text-[0.65rem] font-bold uppercase tracking-[0.1em] text-muted-foreground">
           {source?.organization ?? job.sourceId}
         </span>
-        <span className="block font-display text-xl font-semibold leading-tight text-foreground sm:text-2xl">
+        <span className="block text-base font-bold leading-snug tracking-[-0.025em] text-foreground sm:text-lg">
           {job.title}
         </span>
         <span className="mt-2 flex flex-wrap gap-1.5 sm:hidden">
           {job.workplace ? (
-            <Badge variant="secondary" className="capitalize">
+            <Badge
+              variant="secondary"
+              className="rounded-[1px] border border-primary/20 text-[0.62rem] uppercase"
+            >
               {humanize(job.workplace)}
             </Badge>
           ) : null}
           {job.employmentType ? (
-            <Badge variant="outline" className="capitalize">
+            <Badge
+              variant="outline"
+              className="rounded-[1px] border-primary/20 text-[0.62rem] uppercase"
+            >
               {humanize(job.employmentType)}
             </Badge>
           ) : null}
         </span>
       </span>
 
-      <span className="hidden min-w-0 text-sm text-muted-foreground sm:block">
+      <span className="hidden min-w-0 text-xs text-muted-foreground sm:block">
         <span className="flex items-center gap-2">
           <MapPin className="size-3.5 shrink-0" />
           <span className="truncate">{locations || "Location not listed"}</span>
         </span>
         <span className="mt-1.5 flex items-center gap-2">
           <BriefcaseBusiness className="size-3.5 shrink-0" />
-          <span className="capitalize">
+          <span className="uppercase">
             {humanize(job.workplace) ?? humanize(job.employmentType) ?? "Open role"}
           </span>
         </span>
       </span>
 
-      <span className="self-center rounded-full border border-border p-2 transition group-hover:translate-x-1 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+      <span className="job-arrow self-center border-2 border-primary bg-background p-2 transition group-hover:bg-accent group-hover:text-accent-foreground">
         <ChevronRight className="size-4" />
       </span>
     </button>
@@ -271,7 +288,7 @@ function App() {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
   const [sourceId, setSourceId] = useState(ALL_SOURCES)
   const [sources, setSources] = useState<SourceResponse[]>([])
-  const [sourcesLoaded, setSourcesLoaded] = useState(false)
+
   const deferredQuery = useDeferredValue(query)
 
   useEffect(() => {
@@ -284,11 +301,6 @@ function App() {
         }
       })
       .catch(() => undefined)
-      .finally(() => {
-        if (!controller.signal.aborted) {
-          setSourcesLoaded(true)
-        }
-      })
 
     return () => controller.abort()
   }, [])
@@ -393,172 +405,184 @@ function App() {
   const sourceById = new Map(sources.map((source) => [source.id, source]))
   const filtersActive = Number(remote) + Number(sourceId !== ALL_SOURCES)
   const searchPending = query !== deferredQuery
+
   const selectedSource = selectedJobId
     ? sourceById.get(jobs.find((job) => job.id === selectedJobId)?.sourceId ?? "")
     : undefined
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-primary/20 bg-primary text-primary-foreground">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-          <nav className="flex h-16 items-center justify-between border-b border-white/10">
-            <a className="inline-flex items-center gap-2" href="/">
-              <Waves className="size-6 text-accent" />
-              <span className="font-mono text-sm font-bold tracking-[-0.04em]">
+    <div className="min-h-screen bg-background">
+      <header className="bg-primary text-primary-foreground">
+        <div className="mx-auto max-w-[83.5rem] px-4 sm:px-8">
+          <nav className="flex h-16 items-center justify-between border-b border-primary-foreground/15">
+            <a className="inline-flex items-center gap-2.5" href="/">
+              <span className="grid size-7 place-items-center border border-primary-foreground/60 text-accent">
+                <Waves className="size-4" />
+              </span>
+              <span className="text-sm font-extrabold tracking-[-0.05em] sm:text-base">
                 jobs.surf
               </span>
             </a>
-            <a
-              className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-primary-foreground/70 hover:text-primary-foreground"
-              href="/docs"
-            >
-              API docs
-            </a>
+            <div className="flex items-center gap-4 text-[0.68rem] font-bold uppercase sm:gap-7 sm:text-xs">
+              <a className="nav-link" href="#open-jobs">
+                Jobs
+              </a>
+              <a className="nav-link" href="/docs">
+                API docs
+              </a>
+              <a className="nav-link hidden sm:block" href="/healthz">
+                Status
+              </a>
+            </div>
           </nav>
-
-          <div className="flex flex-col gap-6 py-10 sm:flex-row sm:items-end sm:justify-between sm:py-12">
-            <div>
-              <h1 className="max-w-2xl font-display text-4xl font-semibold leading-tight tracking-[-0.025em] sm:text-5xl">
-                Jobs from the source.
-              </h1>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-primary-foreground/70 sm:text-base">
-                Open roles collected directly from company careers pages.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-secondary">
-              <Radio className="size-3.5 text-accent" />
-              {sourcesLoaded ? `${sources.length} sources` : "Loading sources..."}
-            </div>
-          </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 lg:px-12 lg:py-10">
-        <section aria-labelledby="jobs-heading">
-          <div className="mb-5 flex items-end justify-between gap-4">
-            <div>
-              <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-foreground">
-                Job directory
-              </p>
-              <h2 id="jobs-heading" className="mt-1 font-display text-3xl font-semibold">
-                Open jobs
-              </h2>
+      <main
+        id="open-jobs"
+        className="mx-auto max-w-[83.5rem] scroll-mt-6 px-3 pb-12 sm:px-8 lg:pb-16"
+      >
+        <section>
+          <fieldset className="mt-4 border-2 border-primary bg-background px-3 pb-4 pt-3 sm:px-5 sm:pb-5">
+            <legend className="bg-background px-2 text-xs font-bold uppercase">
+              Search controls
+            </legend>
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_17rem_12rem] sm:items-end">
+              <label className="block">
+                <span className="mb-2 block text-[0.68rem] font-bold uppercase text-muted-foreground">
+                  Keywords
+                </span>
+                <span className="relative block">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    className="h-11 rounded-[2px] border-2 border-primary/40 bg-background pl-10 shadow-none focus-visible:border-primary focus-visible:ring-2"
+                    onChange={(event) => updateQuery(event.target.value)}
+                    placeholder="Rust, design systems, infrastructure..."
+                    type="search"
+                    value={query}
+                  />
+                  {searchPending ? (
+                    <span className="absolute right-3 top-1/2 size-2 -translate-y-1/2 animate-pulse bg-accent ring-1 ring-primary" />
+                  ) : null}
+                </span>
+              </label>
+
+              <div>
+                <span className="mb-2 block text-[0.68rem] font-bold uppercase text-muted-foreground">
+                  Company source
+                </span>
+                <Select value={sourceId} onValueChange={updateSource}>
+                  <SelectTrigger className="h-11 w-full rounded-[2px] border-2 border-primary/40 bg-background focus-visible:border-primary focus-visible:ring-2">
+                    <SelectValue placeholder="All sources" />
+                  </SelectTrigger>
+                  <SelectContent
+                    align="start"
+                    className="rounded-[2px] border-2 border-primary shadow-[4px_4px_0_var(--primary)]"
+                  >
+                    <SelectItem className="rounded-none" value={ALL_SOURCES}>
+                      All sources
+                    </SelectItem>
+                    {sources.map((source) => (
+                      <SelectItem
+                        className="rounded-none"
+                        key={source.id}
+                        value={source.id}
+                      >
+                        {source.organization}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <span className="mb-2 block text-[0.68rem] font-bold uppercase text-muted-foreground">
+                  Workplace
+                </span>
+                <label className="flex h-11 cursor-pointer items-center gap-3 border-2 border-primary/40 bg-background px-3 text-xs font-bold uppercase hover:border-primary">
+                  <Checkbox
+                    checked={remote}
+                    className="rounded-[1px] border-2 border-primary"
+                    onCheckedChange={(checked) => updateRemote(checked === true)}
+                  />
+                  Remote only
+                  {filtersActive ? (
+                    <Badge className="ml-auto rounded-[1px] px-1.5 text-[0.6rem]">
+                      {filtersActive} active
+                    </Badge>
+                  ) : null}
+                </label>
+              </div>
             </div>
-          </div>
+          </fieldset>
 
-          <div className="mb-5 grid gap-3 border-y border-border bg-card/60 p-3 sm:grid-cols-[minmax(0,1fr)_15rem_auto] sm:items-center sm:p-4">
-            <label className="relative block">
-              <span className="sr-only">Search jobs</span>
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                className="h-10 rounded-none border-0 bg-background pl-10 shadow-none ring-1 ring-border focus-visible:ring-2"
-                onChange={(event) => updateQuery(event.target.value)}
-                placeholder="Search Rust, design systems, infrastructure..."
-                type="search"
-                value={query}
-              />
-              {searchPending ? (
-                <span className="absolute right-3 top-1/2 size-1.5 -translate-y-1/2 animate-pulse rounded-full bg-accent" />
+          <div className="pixel-shadow mt-8">
+            <div className="overflow-hidden border-2 border-primary bg-background">
+              <div className="flex items-center justify-between border-b-2 border-primary bg-secondary px-4 py-3 text-[0.62rem] font-bold uppercase tracking-[0.06em] text-muted-foreground sm:px-6">
+                <span>{loading ? "querying index..." : `${jobs.length} results loaded`}</span>
+                <span>
+                  sort // newest first
+                  {filtersActive ? ` // ${filtersActive} active` : ""}
+                </span>
+              </div>
+
+              {loading && jobs.length === 0 ? (
+                <div className="space-y-px bg-primary/20" aria-label="Loading jobs">
+                  {[0, 1, 2, 3].map((item) => (
+                    <div className="bg-background px-6 py-6" key={item}>
+                      <Skeleton className="mb-2 h-3 w-24 rounded-none" />
+                      <Skeleton className="h-6 w-3/5 rounded-none" />
+                      <Skeleton className="mt-3 h-4 w-2/5 rounded-none" />
+                    </div>
+                  ))}
+                </div>
               ) : null}
-            </label>
 
-            <Select value={sourceId} onValueChange={updateSource}>
-              <SelectTrigger className="h-10 w-full rounded-none bg-background">
-                <SelectValue placeholder="All sources" />
-              </SelectTrigger>
-              <SelectContent align="start">
-                <SelectItem value={ALL_SOURCES}>All sources</SelectItem>
-                {sources.map((source) => (
-                  <SelectItem key={source.id} value={source.id}>
-                    {source.organization}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <label className="flex h-10 cursor-pointer items-center justify-between gap-3 border border-border bg-background px-3 text-sm sm:justify-start">
-              <Checkbox
-                checked={remote}
-                onCheckedChange={(checked) => updateRemote(checked === true)}
-              />
-              Remote only
-              {filtersActive ? (
-                <Badge className="ml-auto size-5 justify-center p-0" variant="secondary">
-                  {filtersActive}
-                </Badge>
+              {error ? (
+                <div className="flex items-center gap-3 border-b-2 border-destructive bg-destructive/5 px-5 py-4 text-sm text-destructive">
+                  <CircleAlert className="size-4 shrink-0" />
+                  {error}
+                </div>
               ) : null}
-            </label>
-          </div>
 
-          <div className="overflow-hidden border border-border bg-background">
-            <div className="flex items-center justify-between border-b border-border bg-muted/60 px-4 py-2 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground sm:px-6">
-              <span>{loading ? "Loading jobs..." : `${jobs.length} jobs loaded`}</span>
-              <span className="flex items-center gap-1.5">
-                <SlidersHorizontal className="size-3" /> newest first
-              </span>
+              {!loading && !error && jobs.length === 0 ? (
+                <div className="px-6 py-16 text-center">
+                  <span className="mx-auto mb-5 grid size-12 place-items-center border-2 border-primary bg-secondary">
+                    <BriefcaseBusiness className="size-5" />
+                  </span>
+                  <h3 className="text-xl font-extrabold tracking-[-0.04em]">
+                    No jobs found.
+                  </h3>
+                  <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+                    Clear a filter or try a broader search.
+                  </p>
+                </div>
+              ) : null}
+
+              {jobs.map((job) => (
+                <JobRow
+                  job={job}
+                  key={job.id}
+                  onSelect={setSelectedJobId}
+                  source={sourceById.get(job.sourceId)}
+                />
+              ))}
+
+              {cursor ? (
+                <div className="p-5 text-center sm:p-7">
+                  <Button
+                    className="tp-button h-11 rounded-[2px] border-2 border-primary bg-accent px-5 text-accent-foreground hover:bg-accent/90"
+                    disabled={loadingMore}
+                    onClick={() => void loadMore()}
+                  >
+                    {loadingMore ? "Loading..." : "Load more results"}
+                  </Button>
+                </div>
+              ) : null}
             </div>
-
-            {loading && jobs.length === 0 ? (
-              <div className="space-y-px bg-border" aria-label="Loading jobs">
-                {[0, 1, 2, 3].map((item) => (
-                  <div className="bg-background px-6 py-6" key={item}>
-                    <Skeleton className="mb-2 h-3 w-24" />
-                    <Skeleton className="h-7 w-3/5" />
-                    <Skeleton className="mt-3 h-4 w-2/5" />
-                  </div>
-                ))}
-              </div>
-            ) : null}
-
-            {error ? (
-              <div className="flex items-center gap-3 border-b border-destructive/20 bg-destructive/5 px-5 py-4 text-sm text-destructive">
-                <CircleAlert className="size-4 shrink-0" />
-                {error}
-              </div>
-            ) : null}
-
-            {!loading && !error && jobs.length === 0 ? (
-              <div className="px-6 py-16 text-center">
-                <BriefcaseBusiness className="mx-auto mb-4 size-7 text-muted-foreground" />
-                <h3 className="font-display text-2xl font-semibold">No jobs found.</h3>
-                <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-                  Clear a filter or try a broader search.
-                </p>
-              </div>
-            ) : null}
-
-            {jobs.map((job) => (
-              <JobRow
-                job={job}
-                key={job.id}
-                onSelect={setSelectedJobId}
-                source={sourceById.get(job.sourceId)}
-              />
-            ))}
-
-            {cursor ? (
-              <div className="p-4 text-center sm:p-6">
-                <Button
-                  disabled={loadingMore}
-                  onClick={() => void loadMore()}
-                  variant="outline"
-                >
-                  {loadingMore ? "Loading..." : "Load more"}
-                </Button>
-              </div>
-            ) : null}
           </div>
         </section>
       </main>
-
-      <footer className="mt-8 border-t border-border bg-card/70">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-7 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12">
-          <span>Aggregated from company career pages</span>
-          <a className="hover:text-foreground" href="/healthz">
-            System status
-          </a>
-        </div>
-      </footer>
 
       {selectedJobId ? (
         <JobDetail
