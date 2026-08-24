@@ -1,8 +1,1104 @@
-[[sources]]
-id = "acme-careers"
-organization = "Acme"
-enabled = true
+# Greenhouse
 
-[sources.adapter]
-type = "greenhouse"
-board_token = "acme"
+[[sources]]
+id = "2u-careers"
+organization = "2U"
+adapter = { type = "greenhouse", board_token = "2u" }
+
+[[sources]]
+id = "abnormal-security-careers"
+organization = "Abnormal Security"
+adapter = { type = "greenhouse", board_token = "abnormalsecurity" }
+
+[[sources]]
+id = "affirm-careers"
+organization = "Affirm"
+adapter = { type = "greenhouse", board_token = "affirm" }
+
+[[sources]]
+id = "airbnb-careers"
+organization = "Airbnb"
+adapter = { type = "greenhouse", board_token = "airbnb" }
+
+[[sources]]
+id = "airtable-careers"
+organization = "Airtable"
+adapter = { type = "greenhouse", board_token = "airtable" }
+
+[[sources]]
+id = "aiven-careers"
+organization = "Aiven"
+adapter = { type = "greenhouse", board_token = "aiven36" }
+
+[[sources]]
+id = "algolia-careers"
+organization = "Algolia"
+adapter = { type = "greenhouse", board_token = "algolia" }
+
+[[sources]]
+id = "alloy-careers"
+organization = "Alloy"
+adapter = { type = "greenhouse", board_token = "alloy" }
+
+[[sources]]
+id = "amplitude-careers"
+organization = "Amplitude"
+adapter = { type = "greenhouse", board_token = "amplitude" }
+
+[[sources]]
+id = "anduril-careers"
+organization = "Anduril Industries"
+adapter = { type = "greenhouse", board_token = "andurilindustries" }
+
+[[sources]]
+id = "appian-careers"
+organization = "Appian"
+adapter = { type = "greenhouse", board_token = "appian" }
+
+[[sources]]
+id = "appsflyer-careers"
+organization = "AppsFlyer"
+adapter = { type = "greenhouse", board_token = "appsflyer" }
+
+[[sources]]
+id = "asana-careers"
+organization = "Asana"
+adapter = { type = "greenhouse", board_token = "asana" }
+
+[[sources]]
+id = "astranis-careers"
+organization = "Astranis"
+adapter = { type = "greenhouse", board_token = "astranis" }
+
+[[sources]]
+id = "attentive-careers"
+organization = "Attentive"
+adapter = { type = "greenhouse", board_token = "attentive" }
+
+[[sources]]
+id = "betterment-careers"
+organization = "Betterment"
+adapter = { type = "greenhouse", board_token = "betterment" }
+
+[[sources]]
+id = "bill-careers"
+organization = "BILL"
+adapter = { type = "greenhouse", board_token = "billcom" }
+
+[[sources]]
+id = "bitgo-careers"
+organization = "BitGo"
+adapter = { type = "greenhouse", board_token = "bitgo" }
+
+[[sources]]
+id = "block-careers"
+organization = "Block"
+adapter = { type = "greenhouse", board_token = "block" }
+
+[[sources]]
+id = "braze-careers"
+organization = "Braze"
+adapter = { type = "greenhouse", board_token = "braze" }
+
+[[sources]]
+id = "brex-careers"
+organization = "Brex"
+adapter = { type = "greenhouse", board_token = "brex" }
+
+[[sources]]
+id = "calendly-careers"
+organization = "Calendly"
+adapter = { type = "greenhouse", board_token = "calendly" }
+
+[[sources]]
+id = "canonical-careers"
+organization = "Canonical"
+adapter = { type = "greenhouse", board_token = "canonical" }
+
+[[sources]]
+id = "carta-careers"
+organization = "Carta"
+adapter = { type = "greenhouse", board_token = "carta" }
+
+[[sources]]
+id = "chainguard-careers"
+organization = "Chainguard"
+adapter = { type = "greenhouse", board_token = "chainguard" }
+
+[[sources]]
+id = "checkr-careers"
+organization = "Checkr"
+adapter = { type = "greenhouse", board_token = "checkr" }
+
+[[sources]]
+id = "chime-careers"
+organization = "Chime"
+adapter = { type = "greenhouse", board_token = "chime" }
+
+[[sources]]
+id = "clear-street-careers"
+organization = "Clear Street"
+adapter = { type = "greenhouse", board_token = "clearstreet" }
+
+[[sources]]
+id = "clickhouse-careers"
+organization = "ClickHouse"
+adapter = { type = "greenhouse", board_token = "clickhouse" }
+
+[[sources]]
+id = "cloudflare-careers"
+organization = "Cloudflare"
+adapter = { type = "greenhouse", board_token = "cloudflare" }
+
+[[sources]]
+id = "cockroach-labs-careers"
+organization = "Cockroach Labs"
+adapter = { type = "greenhouse", board_token = "cockroachlabs" }
+
+[[sources]]
+id = "coinbase-careers"
+organization = "Coinbase"
+adapter = { type = "greenhouse", board_token = "coinbase" }
+
+[[sources]]
+id = "contentful-careers"
+organization = "Contentful"
+adapter = { type = "greenhouse", board_token = "contentful" }
+
+[[sources]]
+id = "coreweave-careers"
+organization = "CoreWeave"
+adapter = { type = "greenhouse", board_token = "coreweave" }
+
+[[sources]]
+id = "coursera-careers"
+organization = "Coursera"
+adapter = { type = "greenhouse", board_token = "coursera" }
+
+[[sources]]
+id = "databricks-careers"
+organization = "Databricks"
+adapter = { type = "greenhouse", board_token = "databricks" }
+
+[[sources]]
+id = "datadog-careers"
+organization = "Datadog"
+adapter = { type = "greenhouse", board_token = "datadog" }
+
+[[sources]]
+id = "discord-careers"
+organization = "Discord"
+adapter = { type = "greenhouse", board_token = "discord" }
+
+[[sources]]
+id = "domino-data-lab-careers"
+organization = "Domino Data Lab"
+adapter = { type = "greenhouse", board_token = "dominodatalab" }
+
+[[sources]]
+id = "dremio-careers"
+organization = "Dremio"
+adapter = { type = "greenhouse", board_token = "dremio" }
+
+[[sources]]
+id = "dropbox-careers"
+organization = "Dropbox"
+adapter = { type = "greenhouse", board_token = "dropbox" }
+
+[[sources]]
+id = "duolingo-careers"
+organization = "Duolingo"
+adapter = { type = "greenhouse", board_token = "duolingo" }
+
+[[sources]]
+id = "elastic-careers"
+organization = "Elastic"
+adapter = { type = "greenhouse", board_token = "elastic" }
+
+[[sources]]
+id = "emoney-advisor-careers"
+organization = "eMoney Advisor"
+adapter = { type = "greenhouse", board_token = "emoneyadvisor" }
+
+[[sources]]
+id = "empower-pharmacy-careers"
+organization = "Empower Pharmacy"
+adapter = { type = "greenhouse", board_token = "empowerpharmacy" }
+
+[[sources]]
+id = "epic-games-careers"
+organization = "Epic Games"
+adapter = { type = "greenhouse", board_token = "epicgames" }
+
+[[sources]]
+id = "ever-careers"
+organization = "Ever"
+adapter = { type = "greenhouse", board_token = "ever" }
+
+[[sources]]
+id = "everpure-careers"
+organization = "Everpure"
+adapter = { type = "greenhouse", board_token = "purestorage" }
+
+[[sources]]
+id = "exness-careers"
+organization = "Exness"
+adapter = { type = "greenhouse", board_token = "exnessgloballimited" }
+
+[[sources]]
+id = "expel-careers"
+organization = "Expel"
+adapter = { type = "greenhouse", board_token = "expel" }
+
+[[sources]]
+id = "faire-careers"
+organization = "Faire"
+adapter = { type = "greenhouse", board_token = "faire" }
+
+[[sources]]
+id = "fanduel-careers"
+organization = "FanDuel"
+adapter = { type = "greenhouse", board_token = "fanduel" }
+
+[[sources]]
+id = "fastly-careers"
+organization = "Fastly"
+adapter = { type = "greenhouse", board_token = "fastly" }
+
+[[sources]]
+id = "figma-careers"
+organization = "Figma"
+adapter = { type = "greenhouse", board_token = "figma" }
+
+[[sources]]
+id = "fivetran-careers"
+organization = "Fivetran"
+adapter = { type = "greenhouse", board_token = "fivetran" }
+
+[[sources]]
+id = "flex-careers"
+organization = "Flex"
+adapter = { type = "greenhouse", board_token = "flex" }
+
+[[sources]]
+id = "flexport-careers"
+organization = "Flexport"
+adapter = { type = "greenhouse", board_token = "flexport" }
+
+[[sources]]
+id = "geotab-careers"
+organization = "Geotab"
+adapter = { type = "greenhouse", board_token = "geotab" }
+
+[[sources]]
+id = "gitlab-careers"
+organization = "GitLab"
+adapter = { type = "greenhouse", board_token = "gitlab" }
+
+[[sources]]
+id = "gocardless-careers"
+organization = "GoCardless"
+adapter = { type = "greenhouse", board_token = "gocardless" }
+
+[[sources]]
+id = "grafana-labs-careers"
+organization = "Grafana Labs"
+adapter = { type = "greenhouse", board_token = "grafanalabs" }
+
+[[sources]]
+id = "greenhouse-careers"
+organization = "Greenhouse"
+adapter = { type = "greenhouse", board_token = "greenhouse" }
+
+[[sources]]
+id = "gusto-careers"
+organization = "Gusto"
+adapter = { type = "greenhouse", board_token = "gusto" }
+
+[[sources]]
+id = "hudl-careers"
+organization = "Hudl"
+adapter = { type = "greenhouse", board_token = "hudl" }
+
+[[sources]]
+id = "imc-careers"
+organization = "IMC"
+adapter = { type = "greenhouse", board_token = "imc" }
+
+[[sources]]
+id = "instacart-careers"
+organization = "Instacart"
+adapter = { type = "greenhouse", board_token = "instacart" }
+
+[[sources]]
+id = "intercom-careers"
+organization = "Intercom"
+adapter = { type = "greenhouse", board_token = "intercom" }
+
+[[sources]]
+id = "jamf-careers"
+organization = "Jamf"
+adapter = { type = "greenhouse", board_token = "jamf" }
+
+[[sources]]
+id = "justworks-careers"
+organization = "Justworks"
+adapter = { type = "greenhouse", board_token = "justworks" }
+
+[[sources]]
+id = "klaviyo-careers"
+organization = "Klaviyo"
+adapter = { type = "greenhouse", board_token = "klaviyo" }
+
+[[sources]]
+id = "locus-robotics-careers"
+organization = "Locus Robotics"
+adapter = { type = "greenhouse", board_token = "locusrobotics" }
+
+[[sources]]
+id = "lucid-motors-careers"
+organization = "Lucid Motors"
+adapter = { type = "greenhouse", board_token = "lucidmotors" }
+
+[[sources]]
+id = "lyft-careers"
+organization = "Lyft"
+adapter = { type = "greenhouse", board_token = "lyft" }
+
+[[sources]]
+id = "maven-clinic-careers"
+organization = "Maven Clinic"
+adapter = { type = "greenhouse", board_token = "mavenclinic" }
+
+[[sources]]
+id = "memoryblue-careers"
+organization = "memoryBlue"
+adapter = { type = "greenhouse", board_token = "memoryblue" }
+
+[[sources]]
+id = "mercury-careers"
+organization = "Mercury"
+adapter = { type = "greenhouse", board_token = "mercury" }
+
+[[sources]]
+id = "mews-careers"
+organization = "Mews"
+adapter = { type = "greenhouse", board_token = "mewssystems" }
+
+[[sources]]
+id = "mongodb-careers"
+organization = "MongoDB"
+adapter = { type = "greenhouse", board_token = "mongodb" }
+
+[[sources]]
+id = "moniepoint-careers"
+organization = "Moniepoint"
+adapter = { type = "greenhouse", board_token = "moniepoint" }
+
+[[sources]]
+id = "motive-careers"
+organization = "Motive"
+adapter = { type = "greenhouse", board_token = "motive" }
+
+[[sources]]
+id = "netskope-careers"
+organization = "Netskope"
+adapter = { type = "greenhouse", board_token = "netskope" }
+
+[[sources]]
+id = "neuralink-careers"
+organization = "Neuralink"
+adapter = { type = "greenhouse", board_token = "neuralink" }
+
+[[sources]]
+id = "nextdoor-careers"
+organization = "Nextdoor"
+adapter = { type = "greenhouse", board_token = "nextdoor" }
+
+[[sources]]
+id = "nuro-careers"
+organization = "Nuro"
+adapter = { type = "greenhouse", board_token = "nuro" }
+
+[[sources]]
+id = "okta-careers"
+organization = "Okta"
+adapter = { type = "greenhouse", board_token = "okta" }
+
+[[sources]]
+id = "one-medical-careers"
+organization = "One Medical"
+adapter = { type = "greenhouse", board_token = "onemedical" }
+
+[[sources]]
+id = "onetrust-careers"
+organization = "OneTrust"
+adapter = { type = "greenhouse", board_token = "onetrust" }
+
+[[sources]]
+id = "opentable-careers"
+organization = "OpenTable"
+adapter = { type = "greenhouse", board_token = "opentable" }
+
+[[sources]]
+id = "orca-security-careers"
+organization = "Orca Security"
+adapter = { type = "greenhouse", board_token = "orcasecurity" }
+
+[[sources]]
+id = "pagerduty-careers"
+organization = "PagerDuty"
+adapter = { type = "greenhouse", board_token = "pagerduty" }
+
+[[sources]]
+id = "pandadoc-careers"
+organization = "PandaDoc"
+adapter = { type = "greenhouse", board_token = "pandadoc" }
+
+[[sources]]
+id = "parallel-systems-careers"
+organization = "Parallel Systems"
+adapter = { type = "greenhouse", board_token = "parallel" }
+
+[[sources]]
+id = "pinterest-careers"
+organization = "Pinterest"
+adapter = { type = "greenhouse", board_token = "pinterest" }
+
+[[sources]]
+id = "piston-technologies-careers"
+organization = "Piston Technologies"
+adapter = { type = "greenhouse", board_token = "pistontechnologies" }
+
+[[sources]]
+id = "postman-careers"
+organization = "Postman"
+adapter = { type = "greenhouse", board_token = "postman" }
+
+[[sources]]
+id = "pubmatic-careers"
+organization = "PubMatic"
+adapter = { type = "greenhouse", board_token = "pubmatic" }
+
+[[sources]]
+id = "reddit-careers"
+organization = "Reddit"
+adapter = { type = "greenhouse", board_token = "reddit" }
+
+[[sources]]
+id = "relativity-careers"
+organization = "Relativity"
+adapter = { type = "greenhouse", board_token = "relativity" }
+
+[[sources]]
+id = "ripple-careers"
+organization = "Ripple"
+adapter = { type = "greenhouse", board_token = "ripple" }
+
+[[sources]]
+id = "roboforce-careers"
+organization = "RoboForce"
+adapter = { type = "greenhouse", board_token = "roboforce" }
+
+[[sources]]
+id = "roblox-careers"
+organization = "Roblox"
+adapter = { type = "greenhouse", board_token = "roblox" }
+
+[[sources]]
+id = "robinhood-careers"
+organization = "Robinhood"
+adapter = { type = "greenhouse", board_token = "robinhood" }
+
+[[sources]]
+id = "roku-careers"
+organization = "Roku"
+adapter = { type = "greenhouse", board_token = "roku" }
+
+[[sources]]
+id = "rubrik-careers"
+organization = "Rubrik"
+adapter = { type = "greenhouse", board_token = "rubrik" }
+
+[[sources]]
+id = "salary-finance-careers"
+organization = "Salary Finance"
+adapter = { type = "greenhouse", board_token = "salaryfinance" }
+
+[[sources]]
+id = "samsung-semiconductor-careers"
+organization = "Samsung Semiconductor"
+adapter = { type = "greenhouse", board_token = "samsungsemiconductor" }
+
+[[sources]]
+id = "samsara-careers"
+organization = "Samsara"
+adapter = { type = "greenhouse", board_token = "samsara" }
+
+[[sources]]
+id = "scale-ai-careers"
+organization = "Scale AI"
+adapter = { type = "greenhouse", board_token = "scaleai" }
+
+[[sources]]
+id = "singlestore-careers"
+organization = "SingleStore"
+adapter = { type = "greenhouse", board_token = "singlestore" }
+
+[[sources]]
+id = "smartsheet-careers"
+organization = "Smartsheet"
+adapter = { type = "greenhouse", board_token = "smartsheet" }
+
+[[sources]]
+id = "sofi-careers"
+organization = "SoFi"
+adapter = { type = "greenhouse", board_token = "sofi" }
+
+[[sources]]
+id = "sony-interactive-entertainment-careers"
+organization = "Sony Interactive Entertainment"
+adapter = { type = "greenhouse", board_token = "sonyinteractiveentertainmentglobal" }
+
+[[sources]]
+id = "spacex-careers"
+organization = "SpaceX"
+adapter = { type = "greenhouse", board_token = "spacex" }
+
+[[sources]]
+id = "sprout-social-careers"
+organization = "Sprout Social"
+adapter = { type = "greenhouse", board_token = "sproutsocial" }
+
+[[sources]]
+id = "stackadapt-careers"
+organization = "StackAdapt"
+adapter = { type = "greenhouse", board_token = "stackadapt" }
+
+[[sources]]
+id = "stripe-careers"
+organization = "Stripe"
+adapter = { type = "greenhouse", board_token = "stripe" }
+
+[[sources]]
+id = "sumo-logic-careers"
+organization = "Sumo Logic"
+adapter = { type = "greenhouse", board_token = "sumologic" }
+
+[[sources]]
+id = "sumup-careers"
+organization = "SumUp"
+adapter = { type = "greenhouse", board_token = "sumup" }
+
+[[sources]]
+id = "tanium-careers"
+organization = "Tanium"
+adapter = { type = "greenhouse", board_token = "tanium" }
+
+[[sources]]
+id = "tenstorrent-careers"
+organization = "Tenstorrent"
+adapter = { type = "greenhouse", board_token = "tenstorrent" }
+
+[[sources]]
+id = "the-trade-desk-careers"
+organization = "The Trade Desk"
+adapter = { type = "greenhouse", board_token = "thetradedesk" }
+
+[[sources]]
+id = "toast-careers"
+organization = "Toast"
+adapter = { type = "greenhouse", board_token = "toast" }
+
+[[sources]]
+id = "torc-robotics-careers"
+organization = "Torc Robotics"
+adapter = { type = "greenhouse", board_token = "torcrobotics" }
+
+[[sources]]
+id = "tripadvisor-careers"
+organization = "Tripadvisor"
+adapter = { type = "greenhouse", board_token = "tripadvisor" }
+
+[[sources]]
+id = "twilio-careers"
+organization = "Twilio"
+adapter = { type = "greenhouse", board_token = "twilio" }
+
+[[sources]]
+id = "twitch-careers"
+organization = "Twitch"
+adapter = { type = "greenhouse", board_token = "twitch" }
+
+[[sources]]
+id = "udemy-careers"
+organization = "Udemy"
+adapter = { type = "greenhouse", board_token = "udemy" }
+
+[[sources]]
+id = "vectra-ai-careers"
+organization = "Vectra AI"
+adapter = { type = "greenhouse", board_token = "vectranetworks" }
+
+[[sources]]
+id = "vercel-careers"
+organization = "Vercel"
+adapter = { type = "greenhouse", board_token = "vercel" }
+
+[[sources]]
+id = "verkada-careers"
+organization = "Verkada"
+adapter = { type = "greenhouse", board_token = "verkada" }
+
+[[sources]]
+id = "waymo-careers"
+organization = "Waymo"
+adapter = { type = "greenhouse", board_token = "waymo" }
+
+[[sources]]
+id = "weave-careers"
+organization = "Weave"
+adapter = { type = "greenhouse", board_token = "weave" }
+
+[[sources]]
+id = "webflow-careers"
+organization = "Webflow"
+adapter = { type = "greenhouse", board_token = "webflow" }
+
+[[sources]]
+id = "weightwatchers-careers"
+organization = "WeightWatchers"
+adapter = { type = "greenhouse", board_token = "ww" }
+
+[[sources]]
+id = "wise-careers"
+organization = "Wise"
+adapter = { type = "greenhouse", board_token = "wise" }
+
+[[sources]]
+id = "workato-careers"
+organization = "Workato"
+adapter = { type = "greenhouse", board_token = "workato" }
+
+[[sources]]
+id = "xometry-careers"
+organization = "Xometry"
+adapter = { type = "greenhouse", board_token = "xometry" }
+
+[[sources]]
+id = "yext-careers"
+organization = "Yext"
+adapter = { type = "greenhouse", board_token = "yext" }
+
+[[sources]]
+id = "zscaler-careers"
+organization = "Zscaler"
+adapter = { type = "greenhouse", board_token = "zscaler" }
+
+# Breezy
+
+[[sources]]
+id = "delivery-solutions-careers"
+organization = "Delivery Solutions"
+adapter = { type = "breezy", company_slug = "delivery-solutions" }
+
+[[sources]]
+id = "machinio-careers"
+organization = "Machinio"
+adapter = { type = "breezy", company_slug = "machinio" }
+
+[[sources]]
+id = "prodev-careers"
+organization = "ProDev"
+adapter = { type = "breezy", company_slug = "prodev" }
+
+[[sources]]
+id = "webox-careers"
+organization = "WeBox"
+adapter = { type = "breezy", company_slug = "webox-jobs" }
+
+# Recruitee
+
+[[sources]]
+id = "delta-capita-careers"
+organization = "Delta Capita"
+adapter = { type = "recruitee", company_slug = "careersdeltacapita" }
+
+[[sources]]
+id = "intent-careers"
+organization = "intent"
+adapter = { type = "recruitee", company_slug = "intent" }
+
+[[sources]]
+id = "make-careers"
+organization = "Make"
+adapter = { type = "recruitee", company_slug = "make" }
+
+[[sources]]
+id = "ockto-careers"
+organization = "Ockto"
+adapter = { type = "recruitee", company_slug = "ockto" }
+
+# Personio
+
+[[sources]]
+id = "fairphone-careers"
+organization = "Fairphone"
+adapter = { type = "personio", account = "fairphone" }
+
+[[sources]]
+id = "get-e-careers"
+organization = "Get-e"
+adapter = { type = "personio", account = "get-e" }
+
+[[sources]]
+id = "meiragtx-careers"
+organization = "MeiraGTx"
+adapter = { type = "personio", account = "meiragtx" }
+
+[[sources]]
+id = "platoon-aviation-careers"
+organization = "Platoon Aviation"
+adapter = { type = "personio", account = "platoon-aviation" }
+
+# Workable
+
+[[sources]]
+id = "cloudlinux-careers"
+organization = "CloudLinux"
+adapter = { type = "workable", account = "cloudlinux-1" }
+
+[[sources]]
+id = "hugging-face-careers"
+organization = "Hugging Face"
+adapter = { type = "workable", account = "huggingface" }
+
+[[sources]]
+id = "scitec-careers"
+organization = "SciTec"
+adapter = { type = "workable", account = "scitec" }
+
+[[sources]]
+id = "tetrascience-careers"
+organization = "TetraScience"
+adapter = { type = "workable", account = "tetrascience" }
+
+# Teamtailor
+
+[[sources]]
+id = "recruitgo-careers"
+organization = "RecruitGo"
+adapter = { type = "teamtailor", company = "recruitgo" }
+
+[[sources]]
+id = "starship-technologies-careers"
+organization = "Starship Technologies"
+adapter = { type = "teamtailor", company = "starship" }
+
+[[sources]]
+id = "sweep-careers"
+organization = "SWEEP"
+adapter = { type = "teamtailor", company = "sweep" }
+
+[[sources]]
+id = "tixtrack-careers"
+organization = "TixTrack"
+adapter = { type = "teamtailor", company = "tixtrack" }
+
+# Comeet board tokens are published by each hosted careers page.
+
+[[sources]]
+id = "a-security-careers"
+organization = "A Security"
+adapter = { type = "comeet", company_id = "EA.007", token = "AE74C51416A621F04C51AE720B52B9C4C51" }
+
+[[sources]]
+id = "cyolo-careers"
+organization = "Cyolo"
+adapter = { type = "comeet", company_id = "F5.005", token = "5F523BE017D417D40011DF359D5F5" }
+
+[[sources]]
+id = "ocean-security-careers"
+organization = "Ocean Security"
+adapter = { type = "comeet", company_id = "F9.001", token = "9F145971DD39F127C44F883BA6597905979" }
+
+[[sources]]
+id = "zencity-careers"
+organization = "Zencity"
+adapter = { type = "comeet", company_id = "56.00B", token = "65B262265B1FC7131126220CB62622196C" }
+
+# Ashby
+
+[[sources]]
+id = "ashby-careers"
+organization = "Ashby"
+adapter = { type = "ashby", board_name = "ashby" }
+
+[[sources]]
+id = "coder-careers"
+organization = "Coder"
+adapter = { type = "ashby", board_name = "coder" }
+
+[[sources]]
+id = "cohere-careers"
+organization = "Cohere"
+adapter = { type = "ashby", board_name = "cohere" }
+
+[[sources]]
+id = "cursor-careers"
+organization = "Cursor"
+adapter = { type = "ashby", board_name = "cursor" }
+
+[[sources]]
+id = "decagon-careers"
+organization = "Decagon"
+adapter = { type = "ashby", board_name = "decagon" }
+
+[[sources]]
+id = "elevenlabs-careers"
+organization = "ElevenLabs"
+adapter = { type = "ashby", board_name = "elevenlabs" }
+
+[[sources]]
+id = "harvey-careers"
+organization = "Harvey"
+adapter = { type = "ashby", board_name = "harvey" }
+
+[[sources]]
+id = "langchain-careers"
+organization = "LangChain"
+adapter = { type = "ashby", board_name = "langchain" }
+
+[[sources]]
+id = "linear-careers"
+organization = "Linear"
+adapter = { type = "ashby", board_name = "linear" }
+
+[[sources]]
+id = "modal-careers"
+organization = "Modal"
+adapter = { type = "ashby", board_name = "modal" }
+
+[[sources]]
+id = "notion-careers"
+organization = "Notion"
+adapter = { type = "ashby", board_name = "notion" }
+
+[[sources]]
+id = "openai-careers"
+organization = "OpenAI"
+adapter = { type = "ashby", board_name = "openai" }
+
+[[sources]]
+id = "openrouter-careers"
+organization = "OpenRouter"
+adapter = { type = "ashby", board_name = "openrouter" }
+
+[[sources]]
+id = "perplexity-careers"
+organization = "Perplexity"
+adapter = { type = "ashby", board_name = "perplexity" }
+
+[[sources]]
+id = "pinecone-careers"
+organization = "Pinecone"
+adapter = { type = "ashby", board_name = "pinecone" }
+
+[[sources]]
+id = "posthog-careers"
+organization = "PostHog"
+adapter = { type = "ashby", board_name = "posthog" }
+
+[[sources]]
+id = "ramp-careers"
+organization = "Ramp"
+adapter = { type = "ashby", board_name = "ramp" }
+
+[[sources]]
+id = "render-careers"
+organization = "Render"
+adapter = { type = "ashby", board_name = "render" }
+
+[[sources]]
+id = "replit-careers"
+organization = "Replit"
+adapter = { type = "ashby", board_name = "replit" }
+
+[[sources]]
+id = "rivian-vw-tech-careers"
+organization = "Rivian and Volkswagen Group Technologies"
+adapter = { type = "ashby", board_name = "rivianvw.tech" }
+
+[[sources]]
+id = "scribe-careers"
+organization = "Scribe"
+adapter = { type = "ashby", board_name = "scribe" }
+
+[[sources]]
+id = "sierra-careers"
+organization = "Sierra"
+adapter = { type = "ashby", board_name = "sierra" }
+
+[[sources]]
+id = "solace-health-careers"
+organization = "Solace Health"
+adapter = { type = "ashby", board_name = "solace" }
+
+[[sources]]
+id = "supabase-careers"
+organization = "Supabase"
+adapter = { type = "ashby", board_name = "supabase" }
+
+[[sources]]
+id = "writer-careers"
+organization = "WRITER"
+adapter = { type = "ashby", board_name = "writer" }
+
+# Lever
+
+[[sources]]
+id = "agate-software-careers"
+organization = "Agate Software"
+adapter = { type = "lever", site = "agatesoftware" }
+
+[[sources]]
+id = "apply-digital-careers"
+organization = "Apply Digital"
+adapter = { type = "lever", site = "applydigital" }
+
+[[sources]]
+id = "basis-careers"
+organization = "Basis"
+adapter = { type = "lever", site = "basis" }
+
+[[sources]]
+id = "decile-group-careers"
+organization = "Decile Group"
+adapter = { type = "lever", site = "decilegroup" }
+
+[[sources]]
+id = "deliverect-careers"
+organization = "Deliverect"
+adapter = { type = "lever", site = "deliverect" }
+
+[[sources]]
+id = "emburse-careers"
+organization = "Emburse"
+adapter = { type = "lever", site = "emburse" }
+
+[[sources]]
+id = "emilys-list-careers"
+organization = "EMILY's List"
+adapter = { type = "lever", site = "emilyslist" }
+
+[[sources]]
+id = "employ-careers"
+organization = "Employ"
+adapter = { type = "lever", site = "employ" }
+
+[[sources]]
+id = "kpler-careers"
+organization = "Kpler"
+adapter = { type = "lever", site = "kpler" }
+
+[[sources]]
+id = "metabase-careers"
+organization = "Metabase"
+adapter = { type = "lever", site = "metabase" }
+
+[[sources]]
+id = "modulate-careers"
+organization = "Modulate"
+adapter = { type = "lever", site = "modulate" }
+
+[[sources]]
+id = "nimblerx-careers"
+organization = "NimbleRx"
+adapter = { type = "lever", site = "nimblerx" }
+
+[[sources]]
+id = "novara-careers"
+organization = "Novara"
+adapter = { type = "lever", site = "novara" }
+
+[[sources]]
+id = "rainfocus-careers"
+organization = "RainFocus"
+adapter = { type = "lever", site = "rainfocus" }
+
+[[sources]]
+id = "rws-trainai-careers"
+organization = "RWS TrainAI"
+adapter = { type = "lever", site = "rws" }
+
+[[sources]]
+id = "solopulse-careers"
+organization = "SoloPulse"
+adapter = { type = "lever", site = "solopulseco" }
+
+[[sources]]
+id = "supermove-careers"
+organization = "Supermove"
+adapter = { type = "lever", site = "supermove" }
+
+[[sources]]
+id = "swiftly-careers"
+organization = "Swiftly"
+adapter = { type = "lever", site = "goswift" }
+
+[[sources]]
+id = "toyota-research-institute-careers"
+organization = "Toyota Research Institute"
+adapter = { type = "lever", site = "tri" }
+
+[[sources]]
+id = "walkme-careers"
+organization = "WalkMe"
+adapter = { type = "lever", site = "walkme" }
+
+[[sources]]
+id = "zensurance-careers"
+organization = "Zensurance"
+adapter = { type = "lever", site = "zensurance" }
+
+# These boards require Lever's current `onsite` workplace value.
+
+[[sources]]
+id = "gohighlevel-careers"
+organization = "HighLevel"
+adapter = { type = "lever", site = "gohighlevel" }
+
+[[sources]]
+id = "hermeus-careers"
+organization = "Hermeus"
+adapter = { type = "lever", site = "hermeus" }
+
+[[sources]]
+id = "lalamove-careers"
+organization = "Lalamove"
+adapter = { type = "lever", site = "lalamove" }
+
+[[sources]]
+id = "palantir-careers"
+organization = "Palantir"
+adapter = { type = "lever", site = "palantir" }
+
+[[sources]]
+id = "pigment-careers"
+organization = "Pigment"
+adapter = { type = "lever", site = "pigment" }
+
+[[sources]]
+id = "spotify-careers"
+organization = "Spotify"
+adapter = { type = "lever", site = "spotify" }
+
+[[sources]]
+id = "waabi-careers"
+organization = "Waabi"
+adapter = { type = "lever", site = "waabi" }
+
+[[sources]]
+id = "zoox-careers"
+organization = "Zoox"
+adapter = { type = "lever", site = "zoox" }

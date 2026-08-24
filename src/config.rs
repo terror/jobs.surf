@@ -128,22 +128,21 @@ mod tests {
   }
 
   #[test]
-  fn parses_example() {
+  fn parses_repository_configuration() {
     let config = Config::from_toml(include_str!("../config.toml")).unwrap();
 
-    assert_eq!(
-      config,
-      Config {
-        sources: vec![SourceConfig {
-          adapter: AdapterConfig::Greenhouse {
-            board_token: "acme".into(),
-          },
-          enabled: true,
-          id: "acme-careers".into(),
-          organization: "Acme".into(),
-        }],
-      },
-    );
+    assert!(!config.sources.is_empty());
+    assert!(config.sources.iter().all(|source| {
+      !source.id.trim().is_empty() && !source.organization.trim().is_empty()
+    }));
+
+    let ids = config
+      .sources
+      .iter()
+      .map(|source| &source.id)
+      .collect::<HashSet<_>>();
+
+    assert_eq!(ids.len(), config.sources.len());
   }
 
   #[test]
