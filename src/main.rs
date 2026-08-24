@@ -4,41 +4,25 @@ use {
     subcommand::Subcommand,
   },
   anyhow::Context,
-  axum::{Router, extract::State as AppState, http::StatusCode, routing::get},
+  axum::Router,
   clap::{Args, Parser},
   dotenv::dotenv,
   jobs_surf_db::Db,
   std::{net::SocketAddr, process},
   tokio::net::TcpListener,
   tower_http::trace::TraceLayer,
-  tracing::{error, info},
+  tracing::info,
   tracing_subscriber::EnvFilter,
-};
-
-#[cfg(test)]
-use {
-  axum::{
-    body::{Body, to_bytes},
-    http::{Method, Request},
-  },
-  sqlx::{Postgres, migrate::MigrateDatabase},
-  std::{
-    sync::atomic::{AtomicUsize, Ordering},
-    time::{SystemTime, UNIX_EPOCH},
-  },
-  tower::ServiceExt,
 };
 
 mod arguments;
 mod health;
+mod jobs;
 mod options;
 mod state;
 mod subcommand;
 
 type Result<T = (), E = anyhow::Error> = std::result::Result<T, E>;
-
-#[cfg(test)]
-static TEST_DATABASE_NUMBER: AtomicUsize = AtomicUsize::new(0);
 
 #[tokio::main]
 async fn main() {

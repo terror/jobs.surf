@@ -1,6 +1,18 @@
-use super::*;
+use {
+  crate::state::State,
+  axum::{
+    extract::State as AppState,
+    http::StatusCode,
+    routing::{MethodRouter, get},
+  },
+  tracing::error,
+};
 
-pub(crate) async fn get_health(
+pub(super) fn route() -> MethodRouter<State> {
+  get(get_health)
+}
+
+async fn get_health(
   AppState(state): AppState<State>,
 ) -> Result<&'static str, StatusCode> {
   state.db.ping().await.map_err(|error| {

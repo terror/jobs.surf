@@ -3,7 +3,7 @@ use {
     EmploymentType, Job, JobDraft, JobSnapshot, Source, Workplace,
   },
   sqlx::{PgPool, migrate::MigrateError, postgres::PgPoolOptions, types::Json},
-  std::num::TryFromIntError,
+  std::num::{NonZeroU16, TryFromIntError},
   thiserror::Error as ThisError,
 };
 
@@ -20,10 +20,15 @@ use {
 
 mod db;
 mod error;
+mod job_cursor;
+mod job_page;
+mod job_record;
+mod job_row;
+mod sync_summary;
 
 pub use crate::{
-  db::{Db, SyncSummary},
-  error::Error,
+  db::Db, error::Error, job_cursor::JobCursor, job_page::JobPage,
+  job_record::JobRecord, sync_summary::SyncSummary,
 };
 
 pub type Result<T = (), E = Error> = std::result::Result<T, E>;

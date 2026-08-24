@@ -8,6 +8,7 @@ publish = false
 workspace = true
 
 [dependencies]
+chrono = { workspace = true }
 jobs-surf-model = { path = "../model" }
 sqlx = { workspace = true }
 thiserror = { workspace = true }

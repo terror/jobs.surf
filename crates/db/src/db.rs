@@ -1,15 +1,8 @@
-use super::*;
+use {super::*, crate::job_row::JobRow};
 
 #[derive(Clone, Debug)]
 pub struct Db {
   pool: PgPool,
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct SyncSummary {
-  pub jobs_closed: i32,
-  pub jobs_seen: i32,
-  pub jobs_upserted: i32,
 }
 
 impl Db {
@@ -236,6 +229,84 @@ impl Db {
     .await?;
 
     Ok(())
+  }
+
+  /// Returns one page of open jobs in newest-first order.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the query fails.
+  pub async fn list_jobs(
+    &self,
+    cursor: Option<JobCursor>,
+    limit: NonZeroU16,
+  ) -> Result<JobPage> {
+    let query_limit = i64::from(limit.get()) + 1;
+
+    let rows = if let Some(cursor) = cursor {
+      sqlx::query_as::<_, JobRow>(
+        "SELECT
+           apply_url,
+           description_html,
+           employment_type,
+           first_seen_at,
+           id,
+           locations,
+           published_at,
+           source_id,
+           title,
+           workplace
+         FROM jobs
+         WHERE closed_at IS NULL
+           AND (first_seen_at, id) < ($1, $2)
+         ORDER BY first_seen_at DESC, id DESC
+         LIMIT $3",
+      )
+      .bind(cursor.first_seen_at)
+      .bind(cursor.id)
+      .bind(query_limit)
+      .fetch_all(&self.pool)
+      .await?
+    } else {
+      sqlx::query_as::<_, JobRow>(
+        "SELECT
+           apply_url,
+           description_html,
+           employment_type,
+           first_seen_at,
+           id,
+           locations,
+           published_at,
+           source_id,
+           title,
+           workplace
+         FROM jobs
+         WHERE closed_at IS NULL
+         ORDER BY first_seen_at DESC, id DESC
+         LIMIT $1",
+      )
+      .bind(query_limit)
+      .fetch_all(&self.pool)
+      .await?
+    };
+
+    let mut jobs = rows.into_iter().map(JobRecord::from).collect::<Vec<_>>();
+
+    let requested = usize::from(limit.get());
+    let has_more = jobs.len() > requested;
+
+    jobs.truncate(requested);
+
+    let next_cursor = if has_more {
+      jobs.last().map(|job| JobCursor {
+        first_seen_at: job.first_seen_at,
+        id: job.id,
+      })
+    } else {
+      None
+    };
+
+    Ok(JobPage { jobs, next_cursor })
   }
 
   /// Verifies that `PostgreSQL` is reachable.

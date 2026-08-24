@@ -8,7 +8,7 @@ pub(crate) async fn get(
 ) -> Result<Vec<u8>> {
   let response = client
     .get(url)
-    .timeout(std::time::Duration::from_secs(60))
+    .timeout(std::time::Duration::from_mins(1))
     .send()
     .await
     .and_then(reqwest::Response::error_for_status)
