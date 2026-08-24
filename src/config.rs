@@ -5,6 +5,7 @@ use serde::Deserialize;
 pub enum AdapterConfig {
   Ashby { board_name: String },
   Greenhouse { board_token: String },
+  Lever { site: String },
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]

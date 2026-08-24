@@ -1,6 +1,6 @@
 use {
   chrono::{DateTime, Utc},
-  html_escape::decode_html_entities,
+  html_escape::{decode_html_entities, encode_text},
   jobs_surf_model::{
     EmploymentType, JobDraft, JobLocation, JobSnapshot, Workplace,
   },
@@ -13,6 +13,7 @@ mod adapter;
 pub mod ashby;
 mod error;
 pub mod greenhouse;
+pub mod lever;
 
 pub use crate::{adapter::Adapter, error::Error};
 

@@ -6,4 +6,6 @@ pub enum Error {
   Ashby(#[from] ashby::Error),
   #[error(transparent)]
   Greenhouse(#[from] greenhouse::Error),
+  #[error(transparent)]
+  Lever(#[from] lever::Error),
 }

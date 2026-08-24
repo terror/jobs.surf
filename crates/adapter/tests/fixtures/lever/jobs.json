@@ -1,0 +1,47 @@
+[
+  {
+    "additional": "<div>Acme is an equal opportunity employer.</div>",
+    "additionalPlain": "Acme is an equal opportunity employer.",
+    "applyUrl": "https://jobs.lever.co/acme/33538a2f-d27d-4a96-8f05-fa4b0e4d940e/apply",
+    "categories": {
+      "allLocations": [
+        "New York, NY",
+        "Remote - US"
+      ],
+      "commitment": "Full-time",
+      "department": "Engineering",
+      "location": "New York, NY",
+      "team": "Platform"
+    },
+    "country": "US",
+    "createdAt": 1755684000000,
+    "description": "<div>Build reliable systems.</div>",
+    "descriptionPlain": "Build reliable systems.",
+    "futureProviderField": {
+      "nested": true
+    },
+    "hostedUrl": "https://jobs.lever.co/acme/33538a2f-d27d-4a96-8f05-fa4b0e4d940e",
+    "id": "33538a2f-d27d-4a96-8f05-fa4b0e4d940e",
+    "lists": [
+      {
+        "content": "<li>Own ingestion.</li>",
+        "text": "Impact & ownership"
+      }
+    ],
+    "text": "Senior Rust Engineer",
+    "workplaceType": "hybrid"
+  },
+  {
+    "additional": "",
+    "applyUrl": "https://jobs.lever.co/acme/b73e31f4-fb4e-4555-a915-61a09c10f7dd/apply",
+    "categories": {
+      "commitment": "Freelance",
+      "location": "London, UK"
+    },
+    "description": "",
+    "hostedUrl": "https://jobs.lever.co/acme/b73e31f4-fb4e-4555-a915-61a09c10f7dd",
+    "id": "b73e31f4-fb4e-4555-a915-61a09c10f7dd",
+    "text": "General Application",
+    "workplaceType": "unspecified"
+  }
+]
