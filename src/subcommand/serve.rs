@@ -9,6 +9,7 @@ pub(crate) struct Serve {
 impl Serve {
   fn app(db: Db) -> Router {
     Router::new()
+      .merge(Scalar::with_url("/docs", Documentation::openapi()))
       .route("/healthz", get(health::get_health))
       .route("/v1/jobs", get(jobs::get_jobs))
       .with_state(State { db })

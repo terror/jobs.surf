@@ -59,22 +59,29 @@ impl From<JobCursor> for Cursor {
   }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 struct ErrorResponse {
+  /// Human-readable error message.
   error: &'static str,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 struct JobResponse {
+  /// URL where candidates can apply for the job.
   apply_url: String,
+  /// Sanitized HTML description supplied by the job source.
   description_html: Option<String>,
+  /// Employment type, such as `full_time`, `part_time`, or `contract`.
   employment_type: Option<String>,
+  /// Stable jobs.surf job identifier.
   id: String,
   locations: Vec<LocationResponse>,
   published_at: Option<DateTime<Utc>>,
+  /// Identifier of the source that supplied the job.
   source_id: String,
   title: String,
+  /// Workplace arrangement: `remote`, `hybrid`, or `on_site`.
   workplace: Option<String>,
 }
 
@@ -98,21 +105,26 @@ impl From<JobRecord> for JobResponse {
   }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, IntoParams)]
+#[into_params(parameter_in = Query)]
 #[serde(deny_unknown_fields)]
 pub(super) struct JobsQuery {
+  /// Opaque cursor returned by the previous page.
   cursor: Option<String>,
+  /// Number of jobs to return.
+  #[param(default = 20, maximum = 100, minimum = 1)]
   limit: Option<u16>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub(super) struct JobsResponse {
   jobs: Vec<JobResponse>,
+  /// Cursor for the next page, or `null` when there are no more jobs.
   next_cursor: Option<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 struct LocationResponse {
   name: String,
 }
@@ -125,6 +137,28 @@ impl From<JobLocation> for LocationResponse {
   }
 }
 
+/// Lists open jobs in newest-first order.
+///
+/// Pass `nextCursor` from a response as `cursor` to retrieve the next page.
+#[utoipa::path(
+  get,
+  path = "/v1/jobs",
+  params(JobsQuery),
+  responses(
+    (status = 200, description = "Open jobs", body = JobsResponse),
+    (
+      status = 400,
+      description = "Invalid pagination parameters",
+      body = ErrorResponse,
+    ),
+    (
+      status = 500,
+      description = "Failed to list jobs",
+      body = ErrorResponse,
+    ),
+  ),
+  tag = "jobs",
+)]
 pub(super) async fn get_jobs(
   AppState(state): AppState<State>,
   Query(query): Query<JobsQuery>,

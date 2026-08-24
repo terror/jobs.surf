@@ -1,7 +1,7 @@
 use {
   crate::{
-    arguments::Arguments, config::Config, options::Options, state::State,
-    subcommand::Subcommand,
+    arguments::Arguments, config::Config, documentation::Documentation,
+    options::Options, state::State, subcommand::Subcommand,
   },
   ammonia::clean,
   anyhow::Context,
@@ -30,6 +30,8 @@ use {
   tower_http::trace::TraceLayer,
   tracing::{error, info},
   tracing_subscriber::EnvFilter,
+  utoipa::{IntoParams, OpenApi, ToSchema},
+  utoipa_scalar::{Scalar, Servable},
 };
 
 #[cfg(test)]
@@ -50,6 +52,7 @@ use {
 
 mod arguments;
 mod config;
+mod documentation;
 mod health;
 mod jobs;
 mod options;

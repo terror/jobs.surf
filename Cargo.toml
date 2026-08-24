@@ -50,6 +50,8 @@ tower-http = { version = "0.6.8", features = ["trace"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 thiserror = { workspace = true }
+utoipa = { version = "5.5.0", features = ["chrono"] }
+utoipa-scalar = { version = "0.3.0", features = ["axum"] }
 
 [dev-dependencies]
 sqlx = { workspace = true }
